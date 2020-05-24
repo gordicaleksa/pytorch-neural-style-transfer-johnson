@@ -69,7 +69,7 @@ def train(training_config):
             # Logging and checkpoint creation
             #
             if training_config['log_freq'] is not None and batch_id % training_config['log_freq'] == 0:
-                print(f'time elapsed={time.time()-ts}[s]|epoch={epoch + 1}|batch=[{batch_id + 1}/{len(train_loader)}]|c-loss={acc_content_loss / training_config["log_freq"]}|s-loss={acc_style_loss / training_config["log_freq"]}|total loss={(acc_content_loss + acc_style_loss) / training_config["log_freq"]}')
+                print(f'time elapsed={(time.time()-ts)/60:.2f}[min]|epoch={epoch + 1}|batch=[{batch_id + 1}/{len(train_loader)}]|c-loss={acc_content_loss / training_config["log_freq"]}|s-loss={acc_style_loss / training_config["log_freq"]}|total loss={(acc_content_loss + acc_style_loss) / training_config["log_freq"]}')
                 acc_content_loss, acc_style_loss = [0., 0.]
 
             if training_config['checkpoint_freq'] is not None and (batch_id + 1) % training_config['checkpoint_freq'] == 0:
