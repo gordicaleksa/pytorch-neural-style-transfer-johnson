@@ -31,7 +31,12 @@ if __name__ == '__main__':
     # step2: unzip the resource
     print(f'Started unzipping...')
     with zipfile.ZipFile(resource_tmp_path) as zf:
-        local_resource_path = os.path.join('.', os.pardir, 'models' if args.resource == 'pretrained_models' else 'data')
+        local_resource_path = os.path.join('.', os.pardir)
+        if args.resource == 'pretrained_models':
+            local_resource_path = os.path.join(local_resource_path, 'models', 'binaries')
+        else:
+            local_resource_path = os.path.join(local_resource_path, 'data', 'mscoco')
+        os.makedirs(local_resource_path, exist_ok=True)
         zf.extractall(path=local_resource_path)
     print(f'Unzipping to: {local_resource_path} finished.')
 

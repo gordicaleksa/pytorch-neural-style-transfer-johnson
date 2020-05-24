@@ -32,7 +32,9 @@ class Vgg16(torch.nn.Module):
         for x in range(16, 23):
             self.slice4.add_module(str(x), vgg_pretrained_features[x])
         if not requires_grad:
+            print('yep')
             for param in self.parameters():
+                print(param)
                 param.requires_grad = False
 
     def forward(self, x):
@@ -48,3 +50,6 @@ class Vgg16(torch.nn.Module):
         out = vgg_outputs(relu1_2, relu2_2, relu3_3, relu4_3)
         return out
 
+
+# Set the perceptual loss network to be VGG16
+PerceptualLossNet = Vgg16
