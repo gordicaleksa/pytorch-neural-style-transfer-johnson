@@ -32,9 +32,7 @@ class Vgg16(torch.nn.Module):
         for x in range(16, 23):
             self.slice4.add_module(str(x), vgg_pretrained_features[x])
         if not requires_grad:
-            print('yep')
             for param in self.parameters():
-                print(param)
                 param.requires_grad = False
 
     def forward(self, x):
