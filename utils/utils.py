@@ -1,6 +1,5 @@
 import os
 
-
 import cv2 as cv
 import numpy as np
 from torchvision import transforms
@@ -78,6 +77,7 @@ def get_training_data_loader(training_config):
     train_dataset = datasets.ImageFolder(training_config['dataset_path'], transform)
     sampler = SequentialSubsetSampler(train_dataset, training_config['subset_size'])
     train_loader = DataLoader(train_dataset, batch_size=training_config['batch_size'], sampler=sampler)
+    print(f'Using {len(train_loader)*training_config["batch_size"]*training_config["num_of_epochs"]} datapoints (MS COCO images) for transformer network training.')
     return train_loader
 
 
@@ -93,7 +93,5 @@ def gram_matrix(x, should_normalize=True):
 
 def normalize_batch(batch):
     # Normalize using ImageNet's mean
-    # todo: debug if this has correct shape
-    mean = batch.new_tensor(IMAGENET_MEAN_255)
-    mean = mean.view(-1, 1, 1)
+    mean = batch.new_tensor(IMAGENET_MEAN_255).view(-1, 1, 1)
     return batch - mean
