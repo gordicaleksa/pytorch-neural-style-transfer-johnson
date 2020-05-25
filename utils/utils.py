@@ -2,6 +2,7 @@ import os
 
 import cv2 as cv
 import numpy as np
+import matplotlib.pyplot as plt
 from torchvision import transforms
 from torchvision import datasets
 from torch.utils.data import Dataset, DataLoader, Sampler
@@ -9,6 +10,19 @@ from torch.utils.data import Dataset, DataLoader, Sampler
 
 IMAGENET_MEAN_255 = [123.675, 116.28, 103.53]
 IMAGENET_STD_NEUTRAL = [1, 1, 1]
+
+
+def save_and_maybe_display(inference_config, dump_img, should_display=False):
+    assert isinstance(dump_img, np.ndarray), f'Expected numpy array got {type(dump_img)}.'
+
+    dump_img = np.clip(dump_img, 0, 255).astype('uint8')
+    dump_img = np.moveaxis(dump_img, 0, 2)
+    dump_img_name = inference_config['content_img_name'].split('.')[0] + '_' + str(inference_config['img_height']) + '_' + inference_config['model_name'] + '.jpg'
+    cv.imwrite(os.path.join(inference_config['output_images_path'], dump_img_name), dump_img[:, :, ::-1])  # ::-1 because opencv works with bgr...
+
+    if should_display:
+        plt.imshow(dump_img)
+        plt.show()
 
 
 def load_image(img_path, target_shape=None):
@@ -113,3 +127,8 @@ def dir_contains_only_models(path):
             return False
 
     return True
+
+
+# Count how many trainable weights the model has <- just for having a feeling for how big the model is
+def count_parameters(model):
+    return sum(p.numel() for p in model.parameters() if p.requires_grad)
