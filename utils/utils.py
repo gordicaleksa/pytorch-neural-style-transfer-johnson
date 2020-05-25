@@ -26,16 +26,22 @@ def load_image(img_path, target_shape=None):
     return img
 
 
-def prepare_img(img_path, target_shape, device, repeat=1):
+def prepare_img(img_path, target_shape, device, repeat=1, should_normalize=True):
     img = load_image(img_path, target_shape=target_shape)
 
     # normalize using ImageNet's mean and std (VGG was trained on images normalized this way)
     # [0, 255] range works much better than [0, 1] range (VGG was again trained that way)
-    transform = transforms.Compose([
-        transforms.ToTensor(),
-        transforms.Lambda(lambda x: x.mul(255)),
-        transforms.Normalize(mean=IMAGENET_MEAN_255, std=IMAGENET_STD_NEUTRAL)
-    ])
+    if should_normalize:
+        transform = transforms.Compose([
+            transforms.ToTensor(),
+            transforms.Lambda(lambda x: x.mul(255)),
+            transforms.Normalize(mean=IMAGENET_MEAN_255, std=IMAGENET_STD_NEUTRAL)
+        ])
+    else:
+        transform = transforms.Compose([
+            transforms.ToTensor(),
+            transforms.Lambda(lambda x: x.mul(255)),
+        ])
 
     img = transform(img).to(device)
     img = img.repeat(repeat, 1, 1, 1)
@@ -95,3 +101,15 @@ def normalize_batch(batch):
     # Normalize using ImageNet's mean
     mean = batch.new_tensor(IMAGENET_MEAN_255).view(-1, 1, 1)
     return batch - mean
+
+
+def dir_contains_only_models(path):
+    assert os.path.exists(path), f'Provided path: {path} does not exist.'
+    assert os.path.isdir(path), f'Provided path: {path} is not a directory.'
+    list_of_files = os.listdir(path)
+    assert len(list_of_files) > 0, f'No models found, use training_script.py to train a model or download pretrained models via resource_downloader.py.'
+    for f in list_of_files:
+        if not (f.endswith('.pt') or f.endswith('.pth')):
+            return False
+
+    return True
