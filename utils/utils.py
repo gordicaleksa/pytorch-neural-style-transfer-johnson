@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from torchvision import transforms
 from torchvision import datasets
 from torch.utils.data import Dataset, DataLoader, Sampler
+import torch
 
 
 IMAGENET_MEAN_255 = [123.675, 116.28, 103.53]
@@ -115,6 +116,20 @@ def normalize_batch(batch):
     # Normalize using ImageNet's mean
     mean = batch.new_tensor(IMAGENET_MEAN_255).view(-1, 1, 1)
     return batch - mean
+
+
+def total_variation(img_batch):
+    batch_size = img_batch.shape[0]
+    return (torch.sum(torch.abs(img_batch[:, :, :, :-1] - img_batch[:, :, :, 1:])) +
+            torch.sum(torch.abs(img_batch[:, :, :-1, :] - img_batch[:, :, 1:, :]))) / batch_size
+
+
+def print_header(training_config):
+    print(f'Training network to learn the style of {training_config["style_img_name"]} style image.')
+    print('*' * 40)
+    print(f'Hyperparams: content_weight={training_config["content_weight"]}, style_weight={training_config["style_weight"]} and tv_weight={training_config["tv_weight"]}')
+    print('*' * 40)
+    print(f'Logging frequency every {training_config["log_freq"]} batches.')
 
 
 def dir_contains_only_models(path):

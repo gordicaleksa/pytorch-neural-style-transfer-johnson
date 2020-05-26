@@ -1,7 +1,7 @@
 ## Neural Style Transfer (feed-forward method) :computer: + :art: = :heart:
 This repo contains a concise PyTorch implementation of the original feed-forward NST paper (:link: [Johnson et al.](https://arxiv.org/pdf/1603.08155.pdf)).
 
-Checkout my implementation of the original NST paper ([Gatys et al.](https://github.com/gordicaleksa/pytorch-neural-style-transfer)).
+Checkout my implementation of the original NST (optimization method) paper ([Gatys et al.](https://github.com/gordicaleksa/pytorch-neural-style-transfer)).
 
 It's an accompanying repository for [this video series on YouTube](https://www.youtube.com/watch?v=S78LQebx6jo&list=PLBoQnSflObcmbfshq9oNs41vODgXG-608).
 
@@ -37,7 +37,7 @@ Follow through points 1 and 2 of [this setup](https://github.com/Petlja/PSIML/bl
 
 I found these repos useful: (while developing this one)
 * [fast_neural_style](https://github.com/pytorch/examples/tree/master/fast_neural_style) (PyTorch, feed-forward method)
-* [pytorch-neural-style-transfer](https://github.com/gordicaleksa/pytorch-neural-style-transfer)(PyTorch, optimization method)
+* [pytorch-neural-style-transfer](https://github.com/gordicaleksa/pytorch-neural-style-transfer) (PyTorch, optimization method)
 
 I found some of the content/style images I was using here:
 * [style/artistic images](https://www.rawpixel.com/board/537381/vincent-van-gogh-free-original-public-domain-paintings?sort=curated&mode=shop&page=1)

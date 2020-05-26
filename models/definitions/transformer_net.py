@@ -61,8 +61,8 @@ class TransformerNet(torch.nn.Module):
         y = self.relu(self.in4(self.up1(y)))
         y = self.relu(self.in5(self.up2(y)))
         y = self.up3(y)
-        # todo: monitor the values here
         return y
+
 
 # A small wrapper around nn.Conv2d, so as to make the code cleaner and allow for experimentation with padding
 class ConvLayer(torch.nn.Module):
