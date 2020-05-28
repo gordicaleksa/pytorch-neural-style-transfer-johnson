@@ -36,11 +36,16 @@ def train(training_config):
         for batch_id, (content_batch, _) in enumerate(train_loader):
             # We want to train the transformer net to work on [0, 255] imagery (no ImageNet mean normalization here)
             content_batch = content_batch.to(device)
+            # todo: pogledati preprocessing koji Johnson radi i da li je output simetrican oko nule ili 0,255 kao ja
             stylized_batch = transformer_net(content_batch)
+
+            # stylized_batch = utils.special_preprocessing(stylized_batch)
 
             # We need to normalize these because the perceptual loss net is VGG16 and it was trained on normalized imgs
             normalized_content_batch = utils.normalize_batch(content_batch)
             normalized_stylized_batch = utils.normalize_batch(stylized_batch)
+            # print(torch.max(normalized_content_batch), torch.min(normalized_content_batch))
+            # print(torch.max(normalized_stylized_batch), torch.min(normalized_stylized_batch))
 
             # Calculate content representations
             content_batch_set_of_feature_maps = perceptual_loss_net(normalized_content_batch)
@@ -116,9 +121,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     # todo: experiment with weights here
     parser.add_argument("--style_img_name", type=str, help="style image name that will be used for training", default='mosaic.jpg')
-    parser.add_argument("--content_weight", type=float, help="weight factor for content loss", default=1)
-    parser.add_argument("--style_weight", type=float, help="weight factor for style loss", default=1e2)
-    parser.add_argument("--tv_weight", type=float, help="weight factor for total variation loss", default=1e-3)
+    parser.add_argument("--content_weight", type=float, help="weight factor for content loss", default=2e4)
+    parser.add_argument("--style_weight", type=float, help="weight factor for style loss", default=1e11)
+    parser.add_argument("--tv_weight", type=float, help="weight factor for total variation loss", default=1e0)
     parser.add_argument("--num_of_epochs", type=int, help="number of training epochs ", default=1)
     parser.add_argument("--subset_size", type=int, help="number of MS COCO images to use, default is all (~83k)(specified by None)", default=10000)
     parser.add_argument("--log_freq", type=int, help="logging to output console frequency", default=10)

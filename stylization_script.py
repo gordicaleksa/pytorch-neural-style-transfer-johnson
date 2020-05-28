@@ -12,7 +12,8 @@ def stylize_static_image(inference_config):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     content_img_path = os.path.join(inference_config['content_images_path'], inference_config['content_img_name'])
-    content_image = utils.prepare_img(content_img_path, inference_config['img_height'], device, should_normalize=False)
+    content_image = utils.prepare_img(content_img_path, inference_config['img_height'], device)
+    print(torch.max(content_image), torch.min(content_image), content_image.shape)
 
     # load the weights and set the model to evaluation mode
     stylization_model = TransformerNet().to(device)
@@ -34,7 +35,7 @@ if __name__ == "__main__":
     output_images_path = os.path.join(os.path.dirname(__file__), 'data', 'output-images')
     model_binaries_path = os.path.join(os.path.dirname(__file__), 'models', 'binaries')
 
-    assert utils.dir_contains_only_models(model_binaries_path), f'Model directory should contain only model binaries.'
+    # assert utils.dir_contains_only_models(model_binaries_path), f'Model directory should contain only model binaries.'
     os.makedirs(output_images_path, exist_ok=True)
     model_names = os.listdir(model_binaries_path)  # list of available model binaries
 
@@ -44,7 +45,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--content_img_name", type=str, help="content image to stylize", default='figures.jpg')
     parser.add_argument("--img_height", type=int, help="resize content image to this height", default=500)
-    parser.add_argument("--model_name", type=str, help="model binary to use for stylization", default=model_names[0])
+    parser.add_argument("--model_name", type=str, help="model binary to use for stylization", default='style_mosaic_datapoints_10000_cw_20000.0_sw_100000000000.0_tw_1.0.pth')
     args = parser.parse_args()
 
     # Wrapping inference configuration into a dictionary
