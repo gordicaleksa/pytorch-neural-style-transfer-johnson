@@ -23,7 +23,7 @@ def stylize_static_image(inference_config):
 
     with torch.no_grad():
         stylized_img = stylization_model(content_image).to('cpu').numpy()[0]
-        print(np.max(stylized_img), np.min(stylized_img))
+        print(np.max(stylized_img), np.min(stylized_img), np.mean(stylized_img), np.median(stylized_img))
         utils.save_and_maybe_display(inference_config, stylized_img, should_display=True)
 
 
@@ -45,7 +45,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--content_img_name", type=str, help="content image to stylize", default='figures.jpg')
     parser.add_argument("--img_height", type=int, help="resize content image to this height", default=500)
-    parser.add_argument("--model_name", type=str, help="model binary to use for stylization", default='style_mosaic_datapoints_10000_cw_20000.0_sw_100000000000.0_tw_1.0.pth')
+    parser.add_argument("--model_name", type=str, help="model binary to use for stylization", default='style_mosaic_datapoints_10000_cw_1.0_sw_300000.0_tw_1e-06.pth')
     args = parser.parse_args()
 
     # Wrapping inference configuration into a dictionary

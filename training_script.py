@@ -4,6 +4,7 @@ import time
 
 import torch
 from torch.optim import Adam
+from torch.utils.tensorboard import SummaryWriter
 import git
 
 from models.definitions.perceptual_loss_net import PerceptualLossNet
@@ -12,6 +13,8 @@ import utils.utils as utils
 
 
 def train(training_config):
+    # Writer will output to ./runs/ directory by default
+    writer = SummaryWriter()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     train_loader = utils.get_training_data_loader(training_config)
@@ -36,20 +39,19 @@ def train(training_config):
         for batch_id, (content_batch, _) in enumerate(train_loader):
             # We want to train the transformer net to work on [0, 255] imagery (no ImageNet mean normalization here)
             content_batch = content_batch.to(device)
-            # todo: pogledati preprocessing koji Johnson radi i da li je output simetrican oko nule ili 0,255 kao ja
             stylized_batch = transformer_net(content_batch)
 
             # stylized_batch = utils.special_preprocessing(stylized_batch)
 
             # We need to normalize these because the perceptual loss net is VGG16 and it was trained on normalized imgs
-            normalized_content_batch = utils.normalize_batch(content_batch)
-            normalized_stylized_batch = utils.normalize_batch(stylized_batch)
+            # normalized_content_batch = utils.normalize_batch(content_batch)
+            # normalized_stylized_batch = utils.normalize_batch(stylized_batch)
             # print(torch.max(normalized_content_batch), torch.min(normalized_content_batch))
             # print(torch.max(normalized_stylized_batch), torch.min(normalized_stylized_batch))
 
             # Calculate content representations
-            content_batch_set_of_feature_maps = perceptual_loss_net(normalized_content_batch)
-            stylized_batch_set_of_feature_maps = perceptual_loss_net(normalized_stylized_batch)
+            content_batch_set_of_feature_maps = perceptual_loss_net(content_batch)
+            stylized_batch_set_of_feature_maps = perceptual_loss_net(stylized_batch)
             target_content_representation = content_batch_set_of_feature_maps.relu2_2
             current_content_representation = stylized_batch_set_of_feature_maps.relu2_2
 
@@ -76,9 +78,22 @@ def train(training_config):
             acc_style_loss += style_loss.item()
             acc_tv_loss += tv_loss.item()
 
+            # todo: add tensorboard to env file and enable tensorboard setting
+            writer.add_scalar('Loss/content-loss', content_loss.item(), len(train_loader) * epoch + batch_id + 1)
+            writer.add_scalar('Loss/style-loss', style_loss.item(), len(train_loader) * epoch + batch_id + 1)
+            writer.add_scalar('Loss/tv-loss', tv_loss.item(), len(train_loader) * epoch + batch_id + 1)
+            writer.add_scalars('Statistics/min-max-mean-median', {'min': torch.min(stylized_batch), 'max': torch.max(stylized_batch), 'mean': torch.mean(stylized_batch), 'median': torch.median(stylized_batch)}, len(train_loader) * epoch + batch_id + 1)
+
             if training_config['log_freq'] is not None and batch_id % training_config['log_freq'] == 0:
                 print(f'time elapsed={(time.time()-ts)/60:.2f}[min]|epoch={epoch + 1}|batch=[{batch_id + 1}/{len(train_loader)}]|c-loss={acc_content_loss / training_config["log_freq"]}|s-loss={acc_style_loss / training_config["log_freq"]}|tv-loss={acc_tv_loss / training_config["log_freq"]}|total loss={(acc_content_loss + acc_style_loss + acc_tv_loss) / training_config["log_freq"]}')
                 acc_content_loss, acc_style_loss, acc_tv_loss = [0., 0., 0.]
+                with torch.no_grad():  # todo: consider using detach() it's more concise
+                    import numpy as np
+                    from PIL import Image
+                    tmp = utils.post_process(stylized_batch[0].to('cpu').numpy())
+                    print(tmp.dtype, tmp.shape, np.max(tmp))
+                    tmp = np.moveaxis(tmp, 2, 0)
+                    writer.add_image('stylized_img', tmp, len(train_loader) * epoch + batch_id + 1)
 
             if training_config['checkpoint_freq'] is not None and (batch_id + 1) % training_config['checkpoint_freq'] == 0:
                 ckpt_model_name = f"ckpt_style_{training_config['style_img_name'].split('.')[0]}_cw_{str(training_config['content_weight'])}_sw_{str(training_config['style_weight'])}_tw_{str(training_config['tv_weight'])}_epoch_{epoch}_batch_{batch_id}.pth"
@@ -121,9 +136,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     # todo: experiment with weights here
     parser.add_argument("--style_img_name", type=str, help="style image name that will be used for training", default='mosaic.jpg')
-    parser.add_argument("--content_weight", type=float, help="weight factor for content loss", default=2e4)
-    parser.add_argument("--style_weight", type=float, help="weight factor for style loss", default=1e11)
-    parser.add_argument("--tv_weight", type=float, help="weight factor for total variation loss", default=1e0)
+    parser.add_argument("--content_weight", type=float, help="weight factor for content loss", default=1e0)
+    parser.add_argument("--style_weight", type=float, help="weight factor for style loss", default=3e5)
+    parser.add_argument("--tv_weight", type=float, help="weight factor for total variation loss", default=1e-6)
     parser.add_argument("--num_of_epochs", type=int, help="number of training epochs ", default=1)
     parser.add_argument("--subset_size", type=int, help="number of MS COCO images to use, default is all (~83k)(specified by None)", default=10000)
     parser.add_argument("--log_freq", type=int, help="logging to output console frequency", default=10)

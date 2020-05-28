@@ -14,6 +14,7 @@ class Vgg16(torch.nn.Module):
     """Only those layers are exposed which have already proven to work nicely."""
     def __init__(self, requires_grad=False, show_progress=False):
         super().__init__()
+        # todo: add eval for learning purposes
         vgg_pretrained_features = models.vgg16(pretrained=True, progress=show_progress).features
         self.layer_names = ['relu1_2', 'relu2_2', 'relu3_3', 'relu4_3']
         self.content_feature_maps_index = 1  # relu2_2

@@ -15,14 +15,19 @@ IMAGENET_STD_1 = [0.229, 0.224, 0.225]
 IMAGENET_STD_NEUTRAL = [1, 1, 1]
 
 
+def post_process(dump_img):
+    mean = np.asarray(IMAGENET_MEAN_1).reshape(-1, 1, 1)
+    std = np.asarray(IMAGENET_STD_1).reshape(-1, 1, 1)
+    dump_img = (dump_img * std) + mean
+    dump_img = (np.clip(dump_img, 0., 1.) * 255).astype(np.uint8)
+    dump_img = np.moveaxis(dump_img, 0, 2)
+    return dump_img
+
+
 def save_and_maybe_display(inference_config, dump_img, should_display=False):
     assert isinstance(dump_img, np.ndarray), f'Expected numpy array got {type(dump_img)}.'
 
-    dump_img = np.clip(dump_img, 0, 255).astype('uint8')
-    # dump_img = (dump_img + 150.0) / 300.0
-    # dump_img = dump_img.astype('uint8')
-
-    dump_img = np.moveaxis(dump_img, 0, 2)
+    dump_img = post_process(dump_img)
     dump_img_name = inference_config['content_img_name'].split('.')[0] + '_' + str(inference_config['img_height']) + '_' + inference_config['model_name'] + '.jpg'
     cv.imwrite(os.path.join(inference_config['output_images_path'], dump_img_name), dump_img[:, :, ::-1])  # ::-1 because opencv works with bgr...
 
@@ -95,8 +100,8 @@ def get_training_data_loader(training_config):
         transforms.Resize(training_config['image_size']),
         transforms.CenterCrop(training_config['image_size']),
         transforms.ToTensor(),
-        # transforms.Normalize(mean=IMAGENET_MEAN_1, std=IMAGENET_STD_1)
-        transforms.Lambda(lambda x: x.mul(255)),
+        transforms.Normalize(mean=IMAGENET_MEAN_1, std=IMAGENET_STD_1)
+        # transforms.Lambda(lambda x: x.mul(255)),
         # transforms.Normalize(mean=IMAGENET_MEAN_255, std=IMAGENET_STD_NEUTRAL)
     ])
     train_dataset = datasets.ImageFolder(training_config['dataset_path'], transform)
