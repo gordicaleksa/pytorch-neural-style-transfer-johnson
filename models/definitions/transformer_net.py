@@ -2,10 +2,11 @@
     Modifications to the original J.Johnson's architecture:
         1. Instance normalization is used instead of batch normalization *
         2. Instead of learned up-sampling use nearest-neighbor up-sampling followed by convolution **
-        3. No scaled tanh at the output of the network
+        3. No scaled tanh at the output of the network ***
 
     * Ulyanov showed that this gives better results, checkout the paper here: https://arxiv.org/pdf/1607.08022.pdf
     ** Distill pub blog showed this to have better results: http://distill.pub/2016/deconv-checkerboard/
+    *** I tried using it even opened an issue on the original Johnson's repo (written in Lua) - no improvements
 
     Note: checkout the details about original Johnson's architecture here:
     https://cs.stanford.edu/people/jcjohns/papers/fast-style/fast-style-supp.pdf
@@ -19,8 +20,6 @@ class TransformerNet(torch.nn.Module):
         super().__init__()
         # Non-linearity
         self.relu = torch.nn.ReLU()
-        self.tanh = torch.nn.Tanh()
-        self.tanh_const = 150.0
 
         # Down-sampling convolution layers
         num_of_channels = [3, 32, 64, 128]
@@ -62,17 +61,20 @@ class TransformerNet(torch.nn.Module):
         y = self.res5(y)
         y = self.relu(self.in4(self.up1(y)))
         y = self.relu(self.in5(self.up2(y)))
+        # No tanh activation here as originally proposed by J.Johnson, I didn't get any improvements by using it,
+        # if you get better results using it feel free to make a PR
         return self.up3(y)
 
 
-# A small wrapper around nn.Conv2d, so as to make the code cleaner and allow for experimentation with padding
 class ConvLayer(torch.nn.Module):
+    """
+        A small wrapper around nn.Conv2d, so as to make the code cleaner and allow for experimentation with padding
+    """
     def __init__(self, in_channels, out_channels, kernel_size, stride):
         super().__init__()
         self.conv2d = torch.nn.Conv2d(in_channels, out_channels, kernel_size, stride, padding=kernel_size//2, padding_mode='reflect')
 
     def forward(self, x):
-        debug_var = self.conv2d(x)
         return self.conv2d(x)
 
 
