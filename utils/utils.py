@@ -115,7 +115,7 @@ def get_training_data_loader(training_config, should_normalize=True, is_255_rang
 
     train_dataset = datasets.ImageFolder(training_config['dataset_path'], transform)
     sampler = SequentialSubsetSampler(train_dataset, training_config['subset_size'])
-    train_loader = DataLoader(train_dataset, batch_size=training_config['batch_size'], sampler=sampler)
+    train_loader = DataLoader(train_dataset, batch_size=training_config['batch_size'], sampler=sampler, drop_last=True)
     print(f'Using {len(train_loader)*training_config["batch_size"]*training_config["num_of_epochs"]} datapoints ({len(train_loader)*training_config["num_of_epochs"]} batches) (MS COCO images) for transformer network training.')
     return train_loader
 
