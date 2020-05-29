@@ -27,7 +27,7 @@ def train(training_config):
     # Calculate style image's Gram matrices (style representation)
     # Built over feature maps as produced by the perceptual net - VGG16
     style_img_path = os.path.join(training_config['style_images_path'], training_config['style_img_name'])
-    style_img = utils.prepare_img(style_img_path, target_shape=None, device=device, repeat=training_config['batch_size'])
+    style_img = utils.prepare_img(style_img_path, target_shape=None, device=device, batch_size=training_config['batch_size'])
     style_img_set_of_feature_maps = perceptual_loss_net(style_img)
     target_style_representation = [utils.gram_matrix(x) for x in style_img_set_of_feature_maps]
 
@@ -90,9 +90,10 @@ def train(training_config):
                 with torch.no_grad():  # todo: consider using detach() it's more concise
                     import numpy as np
                     from PIL import Image
-                    tmp = utils.post_process(stylized_batch[0].to('cpu').numpy())
+                    tmp = utils.post_process_image(stylized_batch[0].to('cpu').numpy())
                     print(tmp.dtype, tmp.shape, np.max(tmp))
                     tmp = np.moveaxis(tmp, 2, 0)
+                    # todo: figure out why is tensorboard deleting lots of these images
                     writer.add_image('stylized_img', tmp, len(train_loader) * epoch + batch_id + 1)
 
             if training_config['checkpoint_freq'] is not None and (batch_id + 1) % training_config['checkpoint_freq'] == 0:

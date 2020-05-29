@@ -6,6 +6,7 @@ import os
 # If the link is broken you can download the MS COCO 2014 dataset manually from http://cocodataset.org/#download
 MS_COCO_2014_TRAIN_DATASET_PATH = r'http://images.cocodataset.org/zips/train2014.zip'  # ~13 GB after unzipping
 
+# todo: update the link after I train new models using this repo
 PRETRAINED_MODELS_PATH = r'https://drive.google.com/uc?export=download&id=1_Ae_W0q9qN3JtH4tMnSQvuwLiCsWWSTO'
 
 DOWNLOAD_DICT = {

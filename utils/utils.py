@@ -8,44 +8,24 @@ from torchvision import datasets
 from torch.utils.data import Dataset, DataLoader, Sampler
 import torch
 
-
-IMAGENET_MEAN_255 = [123.675, 116.28, 103.53]
-IMAGENET_MEAN_1 = [0.485, 0.456, 0.406]
-IMAGENET_STD_1 = [0.229, 0.224, 0.225]
-IMAGENET_STD_NEUTRAL = [1, 1, 1]
-
-
-def post_process(dump_img):
-    mean = np.asarray(IMAGENET_MEAN_1).reshape(-1, 1, 1)
-    std = np.asarray(IMAGENET_STD_1).reshape(-1, 1, 1)
-    dump_img = (dump_img * std) + mean
-    dump_img = (np.clip(dump_img, 0., 1.) * 255).astype(np.uint8)
-    dump_img = np.moveaxis(dump_img, 0, 2)
-    return dump_img
-
-
-def save_and_maybe_display(inference_config, dump_img, should_display=False):
-    assert isinstance(dump_img, np.ndarray), f'Expected numpy array got {type(dump_img)}.'
-
-    dump_img = post_process(dump_img)
-    dump_img_name = inference_config['content_img_name'].split('.')[0] + '_' + str(inference_config['img_height']) + '_' + inference_config['model_name'] + '.jpg'
-    cv.imwrite(os.path.join(inference_config['output_images_path'], dump_img_name), dump_img[:, :, ::-1])  # ::-1 because opencv works with bgr...
-
-    if should_display:
-        plt.imshow(dump_img)
-        plt.show()
+IMAGENET_MEAN_1 = np.array([0.485, 0.456, 0.406])
+IMAGENET_STD_1 = np.array([0.229, 0.224, 0.225])
+IMAGENET_MEAN_255 = np.array([123.675, 116.28, 103.53])
+# Usually when normalizing 0..255 images only mean-normalization is performed -> that's why standard dev is all 1s here
+IMAGENET_STD_NEUTRAL = np.array([1, 1, 1])
 
 
 def load_image(img_path, target_shape=None):
     if not os.path.exists(img_path):
         raise Exception(f'Path does not exist: {img_path}')
-    img = cv.imread(img_path)[:, :, ::-1]  # [:, :, ::-1] converts bgr (opencv format...) into rgb
+    img = cv.imread(img_path)[:, :, ::-1]  # [:, :, ::-1] converts BGR (opencv format...) into RGB
 
     if target_shape is not None:  # resize section
         if isinstance(target_shape, int) and target_shape != -1:  # scalar -> implicitly setting the height
-            ratio = target_shape / img.shape[0]
-            width = int(img.shape[1] * ratio)
-            img = cv.resize(img, (width, target_shape), interpolation=cv.INTER_CUBIC)
+            current_height, current_width = img.shape[:2]
+            new_height = target_shape
+            new_width = int(current_width * (new_height / current_height))
+            img = cv.resize(img, (new_width, new_height), interpolation=cv.INTER_CUBIC)
         else:  # set both dimensions to target shape
             img = cv.resize(img, (target_shape[1], target_shape[0]), interpolation=cv.INTER_CUBIC)
 
@@ -55,7 +35,7 @@ def load_image(img_path, target_shape=None):
     return img
 
 
-def prepare_img(img_path, target_shape, device, repeat=1, should_normalize=True, is_255_range=False):
+def prepare_img(img_path, target_shape, device, batch_size=1, should_normalize=True, is_255_range=False):
     img = load_image(img_path, target_shape=target_shape)
 
     transform_list = [transforms.ToTensor()]
@@ -66,9 +46,32 @@ def prepare_img(img_path, target_shape, device, repeat=1, should_normalize=True,
     transform = transforms.Compose(transform_list)
 
     img = transform(img).to(device)
-    img = img.repeat(repeat, 1, 1, 1)
+    img = img.repeat(batch_size, 1, 1, 1)
 
     return img
+
+
+def post_process_image(dump_img):
+    assert isinstance(dump_img, np.ndarray), f'Expected numpy image got {type(dump_img)}'
+
+    mean = IMAGENET_MEAN_1.reshape(-1, 1, 1)
+    std = IMAGENET_STD_1.reshape(-1, 1, 1)
+    dump_img = (dump_img * std) + mean  # de-normalize
+    dump_img = (np.clip(dump_img, 0., 1.) * 255).astype(np.uint8)
+    dump_img = np.moveaxis(dump_img, 0, 2)
+    return dump_img
+
+
+def save_and_maybe_display_image(inference_config, dump_img, should_display=False):
+    assert isinstance(dump_img, np.ndarray), f'Expected numpy array got {type(dump_img)}.'
+
+    dump_img = post_process_image(dump_img)
+    dump_img_name = inference_config['content_img_name'].split('.')[0] + '_' + str(inference_config['img_height']) + '_' + inference_config['model_name'] + '.jpg'
+    cv.imwrite(os.path.join(inference_config['output_images_path'], dump_img_name), dump_img[:, :, ::-1])  # ::-1 because opencv expects BGR (and not RGB) format...
+
+    if should_display:
+        plt.imshow(dump_img)
+        plt.show()
 
 
 class SequentialSubsetSampler(Sampler):
@@ -95,30 +98,26 @@ class SequentialSubsetSampler(Sampler):
         return self.subset_size
 
 
-def get_training_data_loader(training_config):
-    transform = transforms.Compose([
-        transforms.Resize(training_config['image_size']),
-        transforms.CenterCrop(training_config['image_size']),
-        transforms.ToTensor(),
-        transforms.Normalize(mean=IMAGENET_MEAN_1, std=IMAGENET_STD_1)
-        # transforms.Lambda(lambda x: x.mul(255)),
-        # transforms.Normalize(mean=IMAGENET_MEAN_255, std=IMAGENET_STD_NEUTRAL)
-    ])
+def get_training_data_loader(training_config, should_normalize=True, is_255_range=False):
+    """
+        There are multiple ways to make this feed-forward NST working,
+        including using 0..255 range (without any normalization) images during transformer net training,
+        keeping the options if somebody wants to play and get better results.
+    """
+    transform_list = [transforms.Resize(training_config['image_size']),
+                      transforms.CenterCrop(training_config['image_size']),
+                      transforms.ToTensor()]
+    if is_255_range:
+        transform_list.append(transforms.Lambda(lambda x: x.mul(255)))
+    if should_normalize:
+        transform_list.append(transforms.Normalize(mean=IMAGENET_MEAN_255, std=IMAGENET_STD_NEUTRAL) if is_255_range else transforms.Normalize(mean=IMAGENET_MEAN_1, std=IMAGENET_STD_1))
+    transform = transforms.Compose(transform_list)
+
     train_dataset = datasets.ImageFolder(training_config['dataset_path'], transform)
     sampler = SequentialSubsetSampler(train_dataset, training_config['subset_size'])
     train_loader = DataLoader(train_dataset, batch_size=training_config['batch_size'], sampler=sampler)
     print(f'Using {len(train_loader)*training_config["batch_size"]*training_config["num_of_epochs"]} datapoints (MS COCO images) for transformer network training.')
     return train_loader
-
-
-# def special_preprocessing(img_batch):
-#     img_batch += 1.0
-#     print(torch.max(img_batch), torch.min(img_batch))
-#     img_batch /= 2.0
-#     print(torch.max(img_batch), torch.min(img_batch))
-#     img_batch = transforms.Normalize(mean=IMAGENET_MEAN_1, std=IMAGENET_STD_1)(img_batch)
-#     print(torch.max(img_batch), torch.min(img_batch))
-#     return img_batch
 
 
 def gram_matrix(x, should_normalize=True):
@@ -131,17 +130,12 @@ def gram_matrix(x, should_normalize=True):
     return gram
 
 
-def normalize_batch(batch, is_255_range=True):
-    # todo: add some assert here
-    # Normalize using ImageNet's mean
-    if is_255_range:
-        batch /= 255.0
-        mean = batch.new_tensor(IMAGENET_MEAN_1).view(-1, 1, 1)
-        std = batch.new_tensor(IMAGENET_STD_1).view(-1, 1, 1)
-        return (batch - mean) / std
-    else:
-        mean = batch.new_tensor(IMAGENET_MEAN_255).view(-1, 1, 1)
-        return batch - mean
+# Not used atm, you'd want to use this if you choose to go with 0..255 images in the training loader
+def normalize_batch(batch):
+    batch /= 255.0
+    mean = batch.new_tensor(IMAGENET_MEAN_1).view(-1, 1, 1)
+    std = batch.new_tensor(IMAGENET_STD_1).view(-1, 1, 1)
+    return (batch - mean) / std
 
 
 def total_variation(img_batch):

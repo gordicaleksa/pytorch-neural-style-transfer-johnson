@@ -24,7 +24,7 @@ def stylize_static_image(inference_config):
     with torch.no_grad():
         stylized_img = stylization_model(content_image).to('cpu').numpy()[0]
         print(np.max(stylized_img), np.min(stylized_img), np.mean(stylized_img), np.median(stylized_img))
-        utils.save_and_maybe_display(inference_config, stylized_img, should_display=True)
+        utils.save_and_maybe_display_image(inference_config, stylized_img, should_display=True)
 
 
 if __name__ == "__main__":
