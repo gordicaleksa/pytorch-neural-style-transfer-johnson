@@ -13,17 +13,17 @@ def stylize_static_image(inference_config):
 
     content_img_path = os.path.join(inference_config['content_images_path'], inference_config['content_img_name'])
     content_image = utils.prepare_img(content_img_path, inference_config['img_height'], device)
-    print(torch.max(content_image), torch.min(content_image), content_image.shape)
 
     # load the weights and set the model to evaluation mode
     stylization_model = TransformerNet().to(device)
-    state_dict = torch.load(os.path.join(inference_config["model_binaries_path"], inference_config["model_name"]))["state_dict"]
+    training_state = torch.load(os.path.join(inference_config["model_binaries_path"], inference_config["model_name"]))
+    utils.print_model_metadata(training_state)
+    state_dict = training_state["state_dict"]
     stylization_model.load_state_dict(state_dict, strict=True)
     stylization_model.eval()
 
     with torch.no_grad():
         stylized_img = stylization_model(content_image).to('cpu').numpy()[0]
-        print(np.max(stylized_img), np.min(stylized_img), np.mean(stylized_img), np.median(stylized_img))
         utils.save_and_maybe_display_image(inference_config, stylized_img, should_display=True)
 
 
@@ -44,8 +44,8 @@ if __name__ == "__main__":
     #
     parser = argparse.ArgumentParser()
     parser.add_argument("--content_img_name", type=str, help="content image to stylize", default='figures.jpg')
-    parser.add_argument("--img_height", type=int, help="resize content image to this height", default=500)
-    parser.add_argument("--model_name", type=str, help="model binary to use for stylization", default='style_mosaic_datapoints_10000_cw_1.0_sw_300000.0_tw_1e-06.pth')
+    parser.add_argument("--img_height", type=int, help="resize content image to this height", default=None)
+    parser.add_argument("--model_name", type=str, help="model binary to use for stylization", default='starry_v2.pth')
     args = parser.parse_args()
 
     # Wrapping inference configuration into a dictionary

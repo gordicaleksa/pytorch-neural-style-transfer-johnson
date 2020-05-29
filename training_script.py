@@ -5,7 +5,6 @@ import time
 import torch
 from torch.optim import Adam
 from torch.utils.tensorboard import SummaryWriter
-import git
 import numpy as np
 
 from models.definitions.perceptual_loss_net import PerceptualLossNet
@@ -94,24 +93,18 @@ def train(training_config):
                 acc_content_loss, acc_style_loss, acc_tv_loss = [0., 0., 0.]
 
             if training_config['checkpoint_freq'] is not None and (batch_id + 1) % training_config['checkpoint_freq'] == 0:
+                training_state = utils.get_training_metadata(training_config)
+                training_state["state_dict"] = transformer_net.state_dict()
                 ckpt_model_name = f"ckpt_style_{training_config['style_img_name'].split('.')[0]}_cw_{str(training_config['content_weight'])}_sw_{str(training_config['style_weight'])}_tw_{str(training_config['tv_weight'])}_epoch_{epoch}_batch_{batch_id}.pth"
-                torch.save(transformer_net.state_dict(), os.path.join(training_config['checkpoints_path'], ckpt_model_name))
+                torch.save(training_state, os.path.join(training_config['checkpoints_path'], ckpt_model_name))
 
     #
     # Save model with additional metadata - like which commit was used to train the model, style/content weights, etc.
     #
-    num_of_datapoints = training_config['subset_size'] * training_config['num_of_epochs']
-    state = {
-        "state_dict": transformer_net.state_dict(),
-        "commit_hash": git.Repo(search_parent_directories=True).head.object.hexsha,
-        "content_weight": training_config['content_weight'],
-        "style_weight": training_config['style_weight'],
-        "tv_weigh": training_config['tv_weight'],
-        "num_of_datapoints": num_of_datapoints
-    }
-
-    model_name = f"style_{training_config['style_img_name'].split('.')[0]}_datapoints_{num_of_datapoints}_cw_{str(training_config['content_weight'])}_sw_{str(training_config['style_weight'])}_tw_{str(training_config['tv_weight'])}.pth"
-    torch.save(state, os.path.join(training_config['model_binaries_path'], model_name))
+    training_state = utils.get_training_metadata(training_config)
+    training_state["state_dict"] = transformer_net.state_dict()
+    model_name = f"style_{training_config['style_img_name'].split('.')[0]}_datapoints_{training_state['num_of_datapoints']}_cw_{str(training_config['content_weight'])}_sw_{str(training_config['style_weight'])}_tw_{str(training_config['tv_weight'])}.pth"
+    torch.save(training_state, os.path.join(training_config['model_binaries_path'], model_name))
 
 
 if __name__ == "__main__":
@@ -133,10 +126,10 @@ if __name__ == "__main__":
     #
     parser = argparse.ArgumentParser()
     # training related
-    parser.add_argument("--style_img_name", type=str, help="style image name that will be used for training", default='mosaic.jpg')
-    parser.add_argument("--content_weight", type=float, help="weight factor for content loss", default=1e0)
-    parser.add_argument("--style_weight", type=float, help="weight factor for style loss", default=2e5)
-    parser.add_argument("--tv_weight", type=float, help="weight factor for total variation loss", default=1e-6)
+    parser.add_argument("--style_img_name", type=str, help="style image name that will be used for training", default='candy.jpg')
+    parser.add_argument("--content_weight", type=float, help="weight factor for content loss", default=1e0)  # you don't need to change this one just play with style loss
+    parser.add_argument("--style_weight", type=float, help="weight factor for style loss", default=5e5)
+    parser.add_argument("--tv_weight", type=float, help="weight factor for total variation loss", default=0)
     parser.add_argument("--num_of_epochs", type=int, help="number of training epochs ", default=1)
     parser.add_argument("--subset_size", type=int, help="number of MS COCO images to use, default is all (~83k)(specified by None)", default=33000)
     # logging/debugging/checkpoint related (helps a lot with experimentation)

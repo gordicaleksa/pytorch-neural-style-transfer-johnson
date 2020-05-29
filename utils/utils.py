@@ -7,6 +7,7 @@ from torchvision import transforms
 from torchvision import datasets
 from torch.utils.data import Dataset, DataLoader, Sampler
 import torch
+import git
 
 IMAGENET_MEAN_1 = np.array([0.485, 0.456, 0.406])
 IMAGENET_STD_1 = np.array([0.229, 0.224, 0.225])
@@ -155,12 +156,37 @@ def print_header(training_config):
     else:
         print(f'Console logging disabled. Change console_log_freq if you want to use it.')
 
+    if training_config["checkpoint_freq"]:
+        print(f'Saving checkpoint models every {training_config["checkpoint_freq"]} batches.')
+    else:
+        print(f'Checkpoint models saving disabled.')
+
     if training_config['enable_tensorboard']:
         print('Tensorboard enabled.')
         print('Run "tensorboard --logdir=runs --samples_per_plugin images=50" from your conda env')
         print('Open http://localhost:6006/ in your browser and you\'re ready to use tensorboard!')
     else:
         print('Tensorboard disabled.')
+    print('*' * 80)
+
+
+def get_training_metadata(training_config):
+    num_of_datapoints = training_config['subset_size'] * training_config['num_of_epochs']
+    training_metadata = {
+        "commit_hash": git.Repo(search_parent_directories=True).head.object.hexsha,
+        "content_weight": training_config['content_weight'],
+        "style_weight": training_config['style_weight'],
+        "tv_weight": training_config['tv_weight'],
+        "num_of_datapoints": num_of_datapoints
+    }
+    return training_metadata
+
+
+def print_model_metadata(training_state):
+    print('Model training metadata:')
+    for key, value in training_state.items():
+        if key != 'state_dict':
+            print(key, ':', value)
 
 
 def dir_contains_only_models(path):
