@@ -116,7 +116,7 @@ def get_training_data_loader(training_config, should_normalize=True, is_255_rang
     train_dataset = datasets.ImageFolder(training_config['dataset_path'], transform)
     sampler = SequentialSubsetSampler(train_dataset, training_config['subset_size'])
     train_loader = DataLoader(train_dataset, batch_size=training_config['batch_size'], sampler=sampler)
-    print(f'Using {len(train_loader)*training_config["batch_size"]*training_config["num_of_epochs"]} datapoints (MS COCO images) for transformer network training.')
+    print(f'Using {len(train_loader)*training_config["batch_size"]*training_config["num_of_epochs"]} datapoints ({len(train_loader)*training_config["num_of_epochs"]} batches) (MS COCO images) for transformer network training.')
     return train_loader
 
 
@@ -145,11 +145,22 @@ def total_variation(img_batch):
 
 
 def print_header(training_config):
-    print(f'Training network to learn the style of {training_config["style_img_name"]} style image.')
-    print('*' * 70)
+    print(f'Learning the style of {training_config["style_img_name"]} style image.')
+    print('*' * 80)
     print(f'Hyperparams: content_weight={training_config["content_weight"]}, style_weight={training_config["style_weight"]} and tv_weight={training_config["tv_weight"]}')
-    print('*' * 70)
-    print(f'Logging frequency every {training_config["log_freq"]} batches.')
+    print('*' * 80)
+
+    if training_config["console_log_freq"]:
+        print(f'Logging to console every {training_config["console_log_freq"]} batches.')
+    else:
+        print(f'Console logging disabled. Change console_log_freq if you want to use it.')
+
+    if training_config['enable_tensorboard']:
+        print('Tensorboard enabled.')
+        print('Run "tensorboard --logdir=runs --samples_per_plugin images=50" from your conda env')
+        print('Open http://localhost:6006/ in your browser and you\'re ready to use tensorboard!')
+    else:
+        print('Tensorboard disabled.')
 
 
 def dir_contains_only_models(path):

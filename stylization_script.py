@@ -35,7 +35,7 @@ if __name__ == "__main__":
     output_images_path = os.path.join(os.path.dirname(__file__), 'data', 'output-images')
     model_binaries_path = os.path.join(os.path.dirname(__file__), 'models', 'binaries')
 
-    # assert utils.dir_contains_only_models(model_binaries_path), f'Model directory should contain only model binaries.'
+    assert utils.dir_contains_only_models(model_binaries_path), f'Model directory should contain only model binaries.'
     os.makedirs(output_images_path, exist_ok=True)
     model_names = os.listdir(model_binaries_path)  # list of available model binaries
 
