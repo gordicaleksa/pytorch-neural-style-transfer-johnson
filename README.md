@@ -33,6 +33,10 @@ Here are some examples with the pretrained models:
 <img src="data/style-images/vg_starry_night_resized_230.jpg" width="230px">
 <img src="data/examples/starry_night_model/taj_mahal_width_500_model_starry_v3_resize_230.jpg" width="330px">
 <img src="data/examples/starry_night_model/figures_width_500_model_starry_v3_resize_230.jpg" width="342px">
+
+<img src="data/style-images/candy_resize_230.jpg" width="230px">
+<img src="data/examples/candy_model/taj_mahal_width_800_model_candy_resize_230.jpg" width="330px">
+<img src="data/examples/candy_model/figures_width_500_model_candy_resize_230.jpg" width="342px">
 </p>
 
 ## Setup
