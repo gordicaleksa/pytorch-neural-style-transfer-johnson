@@ -52,7 +52,11 @@ So all **you** got to do is place images and models there and you can use them.
 
 After you run resource_downloader.py script binaries dir will be pre-populated with 4 pretrained models.
 
-todo: add some image to this section (watch for size, .jpg)
+Go ahead, play with it and make some art!
+
+<p align="center">
+<img src="data/examples/lion_height_425_model_mosaic_4e5_e2.jpg" width="425px">
+</p>
 
 ### Training your own models
 
