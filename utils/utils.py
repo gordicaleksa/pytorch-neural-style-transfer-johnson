@@ -186,7 +186,7 @@ def get_training_metadata(training_config):
 def print_model_metadata(training_state):
     print('Model training metadata:')
     for key, value in training_state.items():
-        if key != 'state_dict':
+        if key != 'state_dict' and key != 'optimizer_state':
             print(key, ':', value)
 
 

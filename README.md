@@ -48,12 +48,32 @@ You just need to specify **names**, it pulls content images and models from defa
 1. content images default dir: `/data/content-images/`
 2. model binaries default dir: `/models/binaries/`
 
-So all *you* got to do is place images and models there and you can use them.
+So all **you** got to do is place images and models there and you can use them.
+
 After you run resource_downloader.py script binaries dir will be pre-populated with 4 pretrained models.
 
-### Training
+todo: add some image to this section (watch for size, .jpg)
 
-## Debugging/Visualizations
+### Training your own models
+
+1. Download MS COCO dataset, run `python resource_downloader.py -r mscoco_dataset`
+2. Run `python training_script.py --style_img_name <name>`
+
+Now that will probably actually work!
+
+It will periodically dump checkpoint models to `models/checkpoints/` and the final model to `models/binaries/` by default.
+
+I strongly recommend playing with these 2 params:
+1. style_weight - I always kept it in [1e5, 9e5], you may have to tweek it for your specific style image a little bit
+2. subset_size - Usually 32000 images do the job (that's 8k batches) - you'll need to monitor tensorboard to figure out if your curves are saturating at that point or not
+
+That bring us to the next section!
+
+### Visualizations
+
+
+
+## Debugging
 
 ## Experiment
 
