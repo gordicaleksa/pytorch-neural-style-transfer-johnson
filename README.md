@@ -1,17 +1,21 @@
-## Neural Style Transfer (feed-forward method) :computer: + :art: = :heart:
+## Fast Neural Style Transfer (feed-forward method) :zap::computer: + :art: = :heart:
 This repo contains a concise PyTorch implementation of the original feed-forward NST paper (:link: [Johnson et al.](https://arxiv.org/pdf/1603.08155.pdf)).
 
 Checkout my implementation of the original NST (optimization method) paper ([Gatys et al.](https://github.com/gordicaleksa/pytorch-neural-style-transfer)).
 
-It's an accompanying repository for [this video series on YouTube](https://www.youtube.com/watch?v=S78LQebx6jo&list=PLBoQnSflObcmbfshq9oNs41vODgXG-608).
+It's an accompanying repo for [this video series on YouTube](https://www.youtube.com/watch?v=S78LQebx6jo&list=PLBoQnSflObcmbfshq9oNs41vODgXG-608)
 
 <p align="left">
 <a href="https://www.youtube.com/watch?v=S78LQebx6jo" target="_blank"><img src="https://img.youtube.com/vi/S78LQebx6jo/0.jpg" 
 alt="NST Intro" width="480" height="360" border="10" /></a>
 </p>
 
-### Why yet another NST (feed-forward method) repo?
+### Why yet another Fast NST (feed-forward method) repo?
 It's the **cleanest and most concise** NST repo that I know of + it's written in **PyTorch!** :heart:
+
+My idea is to make the code so simple and well commented that you can use it as a **first step on your NST learning journey** before any other blog, course, book or research paper.
+
+I've included automatic MS COCO dataset and pretrained models download script - so you can either **instantaneously run it** and get the results (stylized images) **or start training/experimenting with your own models**.
 
 ## Examples
 

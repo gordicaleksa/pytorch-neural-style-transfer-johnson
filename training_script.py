@@ -117,7 +117,7 @@ if __name__ == "__main__":
     style_images_path = os.path.join(os.path.dirname(__file__), 'data', 'style-images')
     model_binaries_path = os.path.join(os.path.dirname(__file__), 'models', 'binaries')
     checkpoints_root_path = os.path.join(os.path.dirname(__file__), 'models', 'checkpoints')
-    image_size = 256
+    image_size = 256  # training images from MS COCO are resized to image_size x image_size
     batch_size = 4
 
     assert os.path.exists(dataset_path), f'MS COCO missing. Download the dataset using resource_downloader.py script.'
