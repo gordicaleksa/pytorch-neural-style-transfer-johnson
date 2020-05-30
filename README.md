@@ -55,7 +55,8 @@ After you run resource_downloader.py script binaries dir will be pre-populated w
 Go ahead, play with it and make some art!
 
 <p align="center">
-<img src="data/examples/lion_height_425_model_mosaic_4e5_e2.jpg" width="425px">
+<img src="data/examples/lion_width_360_model_mosaic_4e5_e2.jpg" width="360px">
+<img src="data/examples/figures_width_550_model_mosaic_4e5_e2.jpg" height="360px">
 </p>
 
 ### Training your own models
