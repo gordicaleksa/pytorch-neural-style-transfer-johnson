@@ -29,6 +29,10 @@ Here are some examples with the pretrained models:
 <img src="data/style-images/edtaonisl_crop_resized_230.jpg" width="230px">
 <img src="data/examples/edtaonisl_model/taj_mahal_width_500_model_edtaonisl_9e5_33k_resized_230.jpg" width="330px">
 <img src="data/examples/edtaonisl_model/figures_width_500_model_edtaonisl_9e5_33k_resized_230.jpg" width="342px">
+
+<img src="data/style-images/vg_starry_night_resized_230.jpg" width="230px">
+<img src="data/examples/starry_night_model/taj_mahal_width_500_model_starry_v3_resize_230.jpg" width="330px">
+<img src="data/examples/starry_night_model/figures_width_500_model_starry_v3_resize_230.jpg" width="342px">
 </p>
 
 ## Setup
