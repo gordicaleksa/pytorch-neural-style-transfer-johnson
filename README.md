@@ -21,9 +21,11 @@ I've included automatic, pretrained models and MS COCO dataset, download script 
 
 Here are some examples with the pretrained models:
 
-<img src="data/examples/style-images/mosaic_resized_250.jpg" width="250px">
+<p align="center">
+<img src="data/style-images/mosaic_resized_250.jpg" width="250px">
 <img src="data/examples/mosaic_model/taj_mahal_width_500_model_mosaic_4e5_e2_resized_320.jpg" width="320px">
 <img src="data/examples/mosaic_model/figures_width_500_model_mosaic_4e5_e2_resized_336.jpg" width="336px">
+</p>
 
 ## Setup
 
