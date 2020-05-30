@@ -19,7 +19,7 @@ I've included automatic, pretrained models and MS COCO dataset, download script 
 
 ## Examples
 
-Here are some examples with the [4 pretrained models](r'https://drive.google.com/uc?export=download&id=1_Ae_W0q9qN3JtH4tMnSQvuwLiCsWWSTO') (automatic download enabled - look at [usage section](#usage)):
+Here are some examples with the [4 pretrained models](https://www.dropbox.com/s/fb39gscd1b42px1/pretrained_models.zip?dl=0) (automatic download enabled - look at [usage section](#usage)):
 
 <p align="center">
 <img src="data/style-images/mosaic_crop_resized_230.jpg" width="230px">
