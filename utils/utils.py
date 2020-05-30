@@ -67,9 +67,9 @@ def save_and_maybe_display_image(inference_config, dump_img, should_display=Fals
     assert isinstance(dump_img, np.ndarray), f'Expected numpy array got {type(dump_img)}.'
 
     dump_img = post_process_image(dump_img)
-    if inference_config['img_height'] is None:
-        inference_config['img_height'] = dump_img.shape[0]
-    dump_img_name = inference_config['content_img_name'].split('.')[0] + '_width_' + str(inference_config['img_height']) + '_model_' + inference_config['model_name'].split('.')[0] + '.jpg'
+    if inference_config['img_width'] is None:
+        inference_config['img_width'] = dump_img.shape[0]
+    dump_img_name = inference_config['content_img_name'].split('.')[0] + '_width_' + str(inference_config['img_width']) + '_model_' + inference_config['model_name'].split('.')[0] + '.jpg'
     cv.imwrite(os.path.join(inference_config['output_images_path'], dump_img_name), dump_img[:, :, ::-1])  # ::-1 because opencv expects BGR (and not RGB) format...
     print(f'Saved image to {inference_config["output_images_path"]}.')
 

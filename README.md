@@ -64,7 +64,7 @@ Follow through points 1 and 2 of [this setup](https://github.com/Petlja/PSIML/bl
 
 That's it! If you want more flexibility (and I guess you do) there's a couple more nuggets of info:
 
-Full command is: `python stylization_script.py --content_img_name <name> --img_height <height in px> --model_name <name>`
+Full command is: `python stylization_script.py --content_img_name <name> --img_width <height in px> --model_name <name>`
 
 You just need to specify **names**, it pulls content images and models from default directories:
 1. content images default dir: `/data/content-images/`
