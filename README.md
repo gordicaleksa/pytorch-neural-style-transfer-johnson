@@ -22,11 +22,11 @@ I've included automatic, pretrained models and MS COCO dataset, download script 
 Here are some examples with the pretrained models:
 
 <p align="center">
-<img src="data/style-images/mosaic_crop_resized_230.jpg" width="229px">
+<img src="data/style-images/mosaic_crop_resized_230.jpg" width="230px">
 <img src="data/examples/mosaic_model/taj_mahal_width_500_model_mosaic_4e5_e2_resized_230.jpg" width="330px">
 <img src="data/examples/mosaic_model/figures_width_500_model_mosaic_4e5_e2_resized_230.jpg" width="342px">
 
-<img src="data/style-images/edtaonisl_crop_resized_230.jpg" width="229px">
+<img src="data/style-images/edtaonisl_crop_resized_230.jpg" width="230px">
 <img src="data/examples/edtaonisl_model/taj_mahal_width_500_model_edtaonisl_9e5_33k_resized_230.jpg" width="330px">
 <img src="data/examples/edtaonisl_model/figures_width_500_model_edtaonisl_9e5_33k_resized_230.jpg" width="342px">
 </p>
