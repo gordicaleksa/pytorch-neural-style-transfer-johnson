@@ -69,15 +69,15 @@ I strongly recommend playing with these 2 params:
 
 That bring us to the next section!
 
-### Visualizations
+### Tensorboard Visualizations
 
-There's basically **2 things you want to monitor** during your training (I'm not counting console log output because it's redundant if you use tensorboard)
+There's basically **2 things you want to monitor** during your training (not counting console output - it's redundant if you use tensorboard)
 
-1. Monitor your loss/statistics curves
+#### Monitor your loss/statistics curves
 
 You want to keep `content-loss` and `style-loss` going down or at least one of them (style loss usually saturates first). 
 
-I usually set tv weight to 0 so that's why you see 0 on the `tv-loss` curve. You should use it only if you see that your images are having smoothness problem ([checkout this](https://github.com/gordicaleksa/pytorch-neural-style-transfer#impact-of-total-variation-tv-loss) for visualization of what exactly tv weight does)
+I usually set tv weight to 0 so that's why you see 0 on the `tv-loss` curve. You should use it only if you see that your images are having smoothness problem ([check this out](https://github.com/gordicaleksa/pytorch-neural-style-transfer#impact-of-total-variation-tv-loss) for visualization of what exactly tv weight does).
 
 <p align="center">
 <img src="data/examples/readme_pics/loss_curves.PNG" width="900"/>
@@ -89,13 +89,18 @@ Statistics curves let me understand how the stylized image coming out of the tra
 <img src="data/examples/readme_pics/statistics.PNG" width="400"/>
 </p>
 
-If max or min intensities start diverging or mean/median start going to far away from 0 that's a good indicator that your (probably) style weight is not good. 
+If max or min intensities start diverging or mean/median start going to far away from 0 that's a good indicator that your (probably) style weight is not good. You can keep the content weight constant and just tweak the style weight.
 
-You can keep the content weight constant and just tweek the style weight.
+#### Monitor your intermediate stylized images
 
-2. Monitor your intermediate stylized images
+This one helps immensely so as to help you manually early-stop your training if you don't like the stylized output you see.
 
+<p align="center">
+<img src="data/examples/readme_pics/monitor_img1.jpg" height="550"/>
+<img src="data/examples/readme_pics/monitor_img2.jpg" height="550"/>
+</p>
 
+In the beggining stylized images look kinda rubish like the one one the left. As the training progresses you'll get more meaningful images popping out.
 
 ## Debugging
 
