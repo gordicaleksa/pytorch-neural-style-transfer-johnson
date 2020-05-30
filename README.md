@@ -13,9 +13,9 @@ alt="NST Intro" width="480" height="360" border="10" /></a>
 ### Why yet another Fast NST (feed-forward method) repo?
 It's the **cleanest and most concise** NST repo that I know of + it's written in **PyTorch!** :heart:
 
-My idea is to make the code so simple and well commented that you can use it as a **first step on your NST learning journey** before any other blog, course, book or research paper.
+My idea :bulb: is to make the code so simple and well commented that you can use it as a **first step on your NST learning journey** before any other blog, course, book or research paper. :books:
 
-I've included automatic MS COCO dataset and pretrained models download script - so you can either **instantaneously run it** and get the results (stylized images) **or start training/experimenting with your own models**.
+I've included automatic MS COCO dataset and pretrained models download script :scroll: - so you can either **instantaneously run it** and get the results (:art: stylized images) using pretrained models **or start training/experimenting with your own models**. :rocket:
 
 ## Examples
 
@@ -35,13 +35,28 @@ Follow through points 1 and 2 of [this setup](https://github.com/Petlja/PSIML/bl
 
 ## Usage
 
-### Debugging/Experimenting
+### Stylization
+
+step1: Download pretrained models
+
+Just run this script: resource_downloader.py
+
+step2: Run: python stylization_script.py
+
+Done. It's got default params set. This is the full command...
+
+### Training
+
+## Debugging/Visualizations
+
+## Experiment
 
 ## Acknowledgements
 
 I found these repos useful: (while developing this one)
 * [fast_neural_style](https://github.com/pytorch/examples/tree/master/fast_neural_style) (PyTorch, feed-forward method)
 * [pytorch-neural-style-transfer](https://github.com/gordicaleksa/pytorch-neural-style-transfer) (PyTorch, optimization method)
+* [original J.Johnson's repo] (Torch, written in Lua)
 
 I found some of the content/style images I was using here:
 * [style/artistic images](https://www.rawpixel.com/board/537381/vincent-van-gogh-free-original-public-domain-paintings?sort=curated&mode=shop&page=1)
