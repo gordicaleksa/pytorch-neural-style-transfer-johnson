@@ -64,12 +64,36 @@ Now that will probably actually work!
 It will periodically dump checkpoint models to `models/checkpoints/` and the final model to `models/binaries/` by default.
 
 I strongly recommend playing with these 2 params:
-1. style_weight - I always kept it in [1e5, 9e5], you may have to tweek it for your specific style image a little bit
-2. subset_size - Usually 32000 images do the job (that's 8k batches) - you'll need to monitor tensorboard to figure out if your curves are saturating at that point or not
+1. **style_weight** - I always kept it in the [1e5, 9e5] range, you may have to tweek it for your specific style image a little bit
+2. **subset_size** - Usually 32k images do the job (that's 8k batches) - you'll need to monitor **tensorboard** to figure out if your curves are saturating at that point or not. If they are still going set the number higher.
 
 That bring us to the next section!
 
 ### Visualizations
+
+There's basically **2 things you want to monitor** during your training (I'm not counting console log output because it's redundant if you use tensorboard)
+
+1. Monitor your loss/statistics curves
+
+You want to keep `content-loss` and `style-loss` going down or at least one of them (style loss usually saturates first). 
+
+I usually set tv weight to 0 so that's why you see 0 on the `tv-loss` curve. You should use it only if you see that your images are having smoothness problem ([checkout this](https://github.com/gordicaleksa/pytorch-neural-style-transfer#impact-of-total-variation-tv-loss) for visualization of what exactly tv weight does)
+
+<p align="center">
+<img src="data/examples/readme_pics/loss_curves.PNG" width="900"/>
+</p>
+
+Statistics curves let me understand how the stylized image coming out of the transformer net behaves. 
+
+<p align="center">
+<img src="data/examples/readme_pics/statistics.PNG" width="400"/>
+</p>
+
+If max or min intensities start diverging or mean/median start going to far away from 0 that's a good indicator that your (probably) style weight is not good. 
+
+You can keep the content weight constant and just tweek the style weight.
+
+2. Monitor your intermediate stylized images
 
 
 
