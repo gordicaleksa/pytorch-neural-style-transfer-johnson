@@ -19,7 +19,7 @@ I've included automatic, pretrained models and MS COCO dataset, download script 
 
 ## Examples
 
-Here are some examples with the pretrained models:
+Here are some examples with the [4 pretrained models](r'https://drive.google.com/uc?export=download&id=1_Ae_W0q9qN3JtH4tMnSQvuwLiCsWWSTO') (automatic download enabled - look at [usage section](#usage)):
 
 <p align="center">
 <img src="data/style-images/mosaic_crop_resized_230.jpg" width="230px">
@@ -38,6 +38,8 @@ Here are some examples with the pretrained models:
 <img src="data/examples/candy_model/taj_mahal_width_800_model_candy_resize_230.jpg" width="330px">
 <img src="data/examples/candy_model/figures_width_500_model_candy_resize_230.jpg" width="342px">
 </p>
+
+*Note:* keep in mind that I still need to improve these models 3 of these only saw 33k images from MS COCO.
 
 ## Setup
 

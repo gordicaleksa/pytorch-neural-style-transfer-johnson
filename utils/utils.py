@@ -22,10 +22,10 @@ def load_image(img_path, target_shape=None):
     img = cv.imread(img_path)[:, :, ::-1]  # [:, :, ::-1] converts BGR (opencv format...) into RGB
 
     if target_shape is not None:  # resize section
-        if isinstance(target_shape, int) and target_shape != -1:  # scalar -> implicitly setting the height
+        if isinstance(target_shape, int) and target_shape != -1:  # scalar -> implicitly setting the width
             current_height, current_width = img.shape[:2]
-            new_height = target_shape
-            new_width = int(current_width * (new_height / current_height))
+            new_width = target_shape
+            new_height = int(current_height * (new_width / current_width))
             img = cv.resize(img, (new_width, new_height), interpolation=cv.INTER_CUBIC)
         else:  # set both dimensions to target shape
             img = cv.resize(img, (target_shape[1], target_shape[0]), interpolation=cv.INTER_CUBIC)
@@ -67,7 +67,9 @@ def save_and_maybe_display_image(inference_config, dump_img, should_display=Fals
     assert isinstance(dump_img, np.ndarray), f'Expected numpy array got {type(dump_img)}.'
 
     dump_img = post_process_image(dump_img)
-    dump_img_name = inference_config['content_img_name'].split('.')[0] + '_' + str(inference_config['img_height']) + '_' + inference_config['model_name'] + '.jpg'
+    if inference_config['img_height'] is None:
+        inference_config['img_height'] = dump_img.shape[0]
+    dump_img_name = inference_config['content_img_name'].split('.')[0] + '_width_' + str(inference_config['img_height']) + '_model_' + inference_config['model_name'].split('.')[0] + '.jpg'
     cv.imwrite(os.path.join(inference_config['output_images_path'], dump_img_name), dump_img[:, :, ::-1])  # ::-1 because opencv expects BGR (and not RGB) format...
     print(f'Saved image to {inference_config["output_images_path"]}.')
 

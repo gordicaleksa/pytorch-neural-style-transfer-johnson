@@ -12,7 +12,7 @@ def stylize_static_image(inference_config):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     content_img_path = os.path.join(inference_config['content_images_path'], inference_config['content_img_name'])
-    content_image = utils.prepare_img(content_img_path, inference_config['img_height'], device)
+    content_image = utils.prepare_img(content_img_path, inference_config['img_width'], device)
 
     # load the weights and set the model to evaluation mode
     stylization_model = TransformerNet().to(device)
@@ -43,9 +43,9 @@ if __name__ == "__main__":
     # Modifiable args - feel free to play with these
     #
     parser = argparse.ArgumentParser()
-    parser.add_argument("--content_img_name", type=str, help="content image to stylize", default='figures.jpg')
-    parser.add_argument("--img_height", type=int, help="resize content image to this height", default=None)
-    parser.add_argument("--model_name", type=str, help="model binary to use for stylization", default='starry_v2.pth')
+    parser.add_argument("--content_img_name", type=str, help="content image to stylize", default='taj_mahal.jpg')
+    parser.add_argument("--img_width", type=int, help="resize content image to this width", default=500)
+    parser.add_argument("--model_name", type=str, help="model binary to use for stylization", default='starry_v3.pth')
     args = parser.parse_args()
 
     # Wrapping inference configuration into a dictionary

@@ -128,7 +128,7 @@ if __name__ == "__main__":
     #
     parser = argparse.ArgumentParser()
     # training related
-    parser.add_argument("--style_img_name", type=str, help="style image name that will be used for training", default='mosaic.jpg')
+    parser.add_argument("--style_img_name", type=str, help="style image name that will be used for training", default='edtaonisl.jpg')
     parser.add_argument("--content_weight", type=float, help="weight factor for content loss", default=1e0)  # you don't need to change this one just play with style loss
     parser.add_argument("--style_weight", type=float, help="weight factor for style loss", default=4e5)
     parser.add_argument("--tv_weight", type=float, help="weight factor for total variation loss", default=0)

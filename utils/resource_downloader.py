@@ -6,8 +6,7 @@ import os
 # If the link is broken you can download the MS COCO 2014 dataset manually from http://cocodataset.org/#download
 MS_COCO_2014_TRAIN_DATASET_PATH = r'http://images.cocodataset.org/zips/train2014.zip'  # ~13 GB after unzipping
 
-# todo: update the link after I train new models using this repo
-PRETRAINED_MODELS_PATH = r'https://drive.google.com/uc?export=download&id=1_Ae_W0q9qN3JtH4tMnSQvuwLiCsWWSTO'
+PRETRAINED_MODELS_PATH = r'https://www.dropbox.com/s/fb39gscd1b42px1/pretrained_models.zip?dl=1'  # r'https://drive.google.com/uc?export=download&id=1_Ae_W0q9qN3JtH4tMnSQvuwLiCsWWSTO'
 
 DOWNLOAD_DICT = {
     'pretrained_models': PRETRAINED_MODELS_PATH,
@@ -28,6 +27,7 @@ if __name__ == '__main__':
 
     # step1: download the resource to local filesystem
     remote_resource_path = DOWNLOAD_DICT[args.resource]
+    print(f'Downloading from {remote_resource_path}')
     resource_tmp_path = args.resource + '.zip'
     download_url_to_file(remote_resource_path, resource_tmp_path)
 
