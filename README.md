@@ -15,7 +15,7 @@ It's the **cleanest and most concise** NST repo that I know of + it's written in
 
 My idea :bulb: is to make the code so simple and well commented that you can use it as a **first step on your NST learning journey** before any other blog, course, book or research paper. :books:
 
-I've included automatic MS COCO dataset and pretrained models download script :scroll: - so you can either **instantaneously run it** and get the results (:art: stylized images) using pretrained models **or start training/experimenting with your own models**. :rocket:
+I've included automatic MS COCO dataset and pretrained models download script - so you can either **instantaneously run it** and get the results (:art: stylized images) using pretrained models **or start training/experimenting with your own models**. :rocket:
 
 ## Examples
 
@@ -37,13 +37,19 @@ Follow through points 1 and 2 of [this setup](https://github.com/Petlja/PSIML/bl
 
 ### Stylization
 
-step1: Download pretrained models
+1. Download pretrained models, run: `python resource_downloader.py` (it'll download pretrained models by default)
+2. Run `python stylization_script.py` (it's got default content image and model set)
 
-Just run this script: resource_downloader.py
+That's it! If you want more flexibility (and I guess you do) there's a couple more nuggets of info:
 
-step2: Run: python stylization_script.py
+Full command is: `python stylization_script.py --content_img_name <name> --img_height <height in px> --model_name <name>`
 
-Done. It's got default params set. This is the full command...
+You just need to specify **names**, it pulls content images and models from default directories:
+1. content images default dir: `/data/content-images/`
+2. model binaries default dir: `/models/binaries/`
+
+So all *you* got to do is place images and models there and you can use them.
+After you run resource_downloader.py script binaries dir will be pre-populated with 4 pretrained models.
 
 ### Training
 
@@ -56,7 +62,7 @@ Done. It's got default params set. This is the full command...
 I found these repos useful: (while developing this one)
 * [fast_neural_style](https://github.com/pytorch/examples/tree/master/fast_neural_style) (PyTorch, feed-forward method)
 * [pytorch-neural-style-transfer](https://github.com/gordicaleksa/pytorch-neural-style-transfer) (PyTorch, optimization method)
-* [original J.Johnson's repo] (Torch, written in Lua)
+* [original J.Johnson's repo](https://github.com/jcjohnson/fast-neural-style) (Torch, written in Lua)
 
 I found some of the content/style images I was using here:
 * [style/artistic images](https://www.rawpixel.com/board/537381/vincent-van-gogh-free-original-public-domain-paintings?sort=curated&mode=shop&page=1)
