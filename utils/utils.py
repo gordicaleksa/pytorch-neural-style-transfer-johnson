@@ -69,6 +69,7 @@ def save_and_maybe_display_image(inference_config, dump_img, should_display=Fals
     dump_img = post_process_image(dump_img)
     dump_img_name = inference_config['content_img_name'].split('.')[0] + '_' + str(inference_config['img_height']) + '_' + inference_config['model_name'] + '.jpg'
     cv.imwrite(os.path.join(inference_config['output_images_path'], dump_img_name), dump_img[:, :, ::-1])  # ::-1 because opencv expects BGR (and not RGB) format...
+    print(f'Saved image to {inference_config["output_images_path"]}.')
 
     if should_display:
         plt.imshow(dump_img)

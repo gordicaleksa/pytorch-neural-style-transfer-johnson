@@ -100,13 +100,26 @@ This one helps immensely so as to help you manually early-stop your training if 
 <img src="data/examples/readme_pics/monitor_img2.jpg" height="350"/>
 </p>
 
-In the beggining stylized images look kinda rubish like the one one the left. 
+In the beggining stylized images look kinda rubish like the one one the left. As the training progresses you'll get more meaningful images popping out (the one on the right).
 
-As the training progresses you'll get more meaningful images popping out (the one on the right).
+To **start tensorboard** just run: `tensorboard --logdir=runs --samples_per_plugin images=50`
+
+`samples_per_plugin images=<number>` sets the number of images you'll be able to see when moving the image slider. 
 
 ## Debugging
+Q: My style/content loss curves just spiked in the middle of training?
+A: 2 options: a) rerun the training (optimizer got into bad state) b) lower your style weight
 
-## Experiment
+Q: How can I see the exact parameters that you used to train your models?
+A: Just run the model in the `stylization_script.py`, training metadata will be printed out in the output console.
+
+## Further experimentation (advanced)
+
+There's a couple of things you could experiment with (assuming fixed net architectures), here are some ideas:
+1. Try and set mse_loss to `sum` reduction for the style loss. I used that method [here](https://github.com/gordicaleksa/pytorch-neural-style-transfer/blob/master/neural_style_transfer.py) and it gave nice results. You'll have to play with style-weight afterwards to get it running. This will effectively give bigger weight to deeper style representations because Gram matrices coming out from deeper layers are bigger. Meaning you'll give advantage to broader style features than to low level style features.
+2. Original paper used tanh activation at the output - figure out how you can get it to work using that, you may have to add some scaling.
+3. PyTorch VGG16 pretrained model was trained on the 0..1 range ImageNet normalized images. Try and work with 0..255 range ImageNet mean-only-normalized images - that will also work! It worked [here](https://github.com/gordicaleksa/pytorch-neural-style-transfer/blob/master/utils/utils.py) and if you try and feed such an image into VGG16 (as a classifier) it will give you correct predictions!
+4. [This repo](https://github.com/pytorch/examples/tree/master/fast_neural_style) used 0..255 images (no normalization) as an input to transformer net - play with that. You'll have to normalize transformer net output before feeding that to VGG16.
 
 ## Acknowledgements
 
