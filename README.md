@@ -71,7 +71,7 @@ That bring us to the next section!
 
 ### Tensorboard Visualizations
 
-There's basically **2 things you want to monitor** during your training (not counting console output - it's redundant if you use tensorboard)
+There's basically **2 things you want to monitor** during your training (not counting console output; redundant if you use t-board)
 
 #### Monitor your loss/statistics curves
 
@@ -96,11 +96,13 @@ If max or min intensities start diverging or mean/median start going to far away
 This one helps immensely so as to help you manually early-stop your training if you don't like the stylized output you see.
 
 <p align="center">
-<img src="data/examples/readme_pics/monitor_img1.jpg" height="550"/>
-<img src="data/examples/readme_pics/monitor_img2.jpg" height="550"/>
+<img src="data/examples/readme_pics/monitor_img1.jpg" height="350"/>
+<img src="data/examples/readme_pics/monitor_img2.jpg" height="350"/>
 </p>
 
-In the beggining stylized images look kinda rubish like the one one the left. As the training progresses you'll get more meaningful images popping out.
+In the beggining stylized images look kinda rubish like the one one the left. 
+
+As the training progresses you'll get more meaningful images popping out (the one on the right).
 
 ## Debugging
 
