@@ -3,7 +3,7 @@ This repo contains a concise PyTorch implementation of the original feed-forward
 
 Checkout my implementation of the original NST (optimization method) paper ([Gatys et al.](https://github.com/gordicaleksa/pytorch-neural-style-transfer)).
 
-It's an accompanying repo for [this video series on YouTube](https://www.youtube.com/watch?v=S78LQebx6jo&list=PLBoQnSflObcmbfshq9oNs41vODgXG-608)
+It's an accompanying repo for [this video series on YouTube](https://www.youtube.com/watch?v=S78LQebx6jo&list=PLBoQnSflObcmbfshq9oNs41vODgXG-608).
 
 <p align="left">
 <a href="https://www.youtube.com/watch?v=S78LQebx6jo" target="_blank"><img src="https://img.youtube.com/vi/S78LQebx6jo/0.jpg" 
@@ -13,7 +13,7 @@ alt="NST Intro" width="480" height="360" border="10" /></a>
 ### Why yet another Fast NST (feed-forward method) repo?
 It's the **cleanest and most concise** NST repo that I know of + it's written in **PyTorch!** :heart:
 
-My idea :bulb: is to make the code so simple and well commented that you can use it as a **first step on your NST learning journey** before any other blog, course, book or research paper. :books:
+My idea :bulb: is to make the code so simple and well commented, that you can use it as a **first step on your NST learning journey** before any other blog, course, book or research paper. :books:
 
 I've included automatic, pretrained models and MS COCO dataset, download script - so you can either **instantaneously run it** and get the results (:art: stylized images) using pretrained models **or start training/experimenting with your own models**. :rocket:
 
@@ -39,12 +39,12 @@ Here are some examples with the [4 pretrained models](https://www.dropbox.com/s/
 <img src="data/examples/candy_model/figures_width_500_model_candy_resize_230.jpg" width="342px">
 </p>
 
-*Note:* keep in mind that I still need to improve these models 3 of these only saw 33k images from MS COCO.
+*Note:* keep in mind that I still need to improve these models, 3 of these (last 3 rows) only saw 33k images from MS COCO.
 
 ## Setup
 
-1. Run `conda env create` from project directory.
-2. Run `activate pytorch-nst-fast`
+1. Run `conda env create` from project directory (this will create a brand new conda environment).
+2. Run `activate pytorch-nst-fast` (if you want to run scripts from your console otherwise set the interpreter in your IDE)
 
 That's it! It should work out-of-the-box executing environment.yml file which deals with dependencies.
 
@@ -52,19 +52,18 @@ That's it! It should work out-of-the-box executing environment.yml file which de
 
 PyTorch package will pull some version of CUDA with it, but it is highly recommended that you install system-wide CUDA beforehand, mostly because of GPU drivers. I also recommend using Miniconda installer as a way to get conda on your system. 
 
-Follow through points 1 and 2 of [this setup](https://github.com/Petlja/PSIML/blob/master/docs/MachineSetup.md) and use the most up-to-date versions of Miniconda and CUDA/cuDNN.
-(I recommend CUDA 10.1 or 10.2 as those are compatible with PyTorch 1.5, which is used in this repo, and newest compatible cuDNN)
+Follow through points 1 and 2 of [this setup](https://github.com/Petlja/PSIML/blob/master/docs/MachineSetup.md) and use the most up-to-date versions of Miniconda and CUDA/cuDNN (I recommend CUDA 10.1 or 10.2 as those are compatible with PyTorch 1.5, which is used in this repo, and newest compatible cuDNN).
 
 ## Usage
 
 ### Stylization
 
-1. Download pretrained models, run: `python resource_downloader.py` (it'll download pretrained models by default)
+1. Download pretrained models, run: `python utils/resource_downloader.py` (it'll download pretrained models by default)
 2. Run `python stylization_script.py` (it's got default content image and model set)
 
 That's it! If you want more flexibility (and I guess you do) there's a couple more nuggets of info:
 
-Full command is: `python stylization_script.py --content_img_name <name> --img_width <height in px> --model_name <name>`
+Full command is: `python stylization_script.py --content_img_name <name> --img_width <width in px> --model_name <name>`
 
 You just need to specify **names**, it pulls content images and models from default directories:
 1. content images default dir: `/data/content-images/`
@@ -83,16 +82,16 @@ Go ahead, play with it and make some art!
 
 ### Training your own models
 
-1. Download MS COCO dataset, run `python resource_downloader.py -r mscoco_dataset`
+1. Download MS COCO dataset, run `python utils/resource_downloader.py -r mscoco_dataset`
 2. Run `python training_script.py --style_img_name <name>`
 
 Now that will probably actually work!
 
-It will periodically dump checkpoint models to `models/checkpoints/` and the final model to `models/binaries/` by default.
+It will periodically dump checkpoint models to `/models/checkpoints/` and the final model to `/models/binaries/` by default.
 
 I strongly recommend playing with these 2 params:
-1. **style_weight** - I always kept it in the [1e5, 9e5] range, you may have to tweek it for your specific style image a little bit
-2. **subset_size** - Usually 32k images do the job (that's 8k batches) - you'll need to monitor **tensorboard** to figure out if your curves are saturating at that point or not. If they are still going set the number higher.
+1. **style_weight** - I always kept it in the [1e5, 9e5] range, you may have to tweak it for your specific style image a little bit
+2. **subset_size** - Usually 32k images do the job (that's 8k batches) - you'll need to monitor **tensorboard** to figure out if your curves are saturating at that point or not. If they are still going down set the number higher
 
 That bring us to the next section!
 
@@ -151,6 +150,8 @@ There's a couple of things you could experiment with (assuming fixed net archite
 2. Original paper used `tanh activation` at the output - figure out how you can get it to work using that, you may have to add some scaling. There is this magic constant 150 that Johnson originally used to scale tanh. I created [this issue](https://github.com/jcjohnson/fast-neural-style/issues/186) as it is un-clear of how it came to be and whether it was just experimentally figured out.
 3. PyTorch VGG16 pretrained model was trained on the 0..1 range ImageNet normalized images. Try and work with 0..255 range ImageNet mean-only-normalized images - that will also work! It worked [here](https://github.com/gordicaleksa/pytorch-neural-style-transfer/blob/master/utils/utils.py) and if you try and feed such an image into VGG16 (as a classifier) it will give you correct predictions!
 4. [This repo](https://github.com/pytorch/examples/tree/master/fast_neural_style) used 0..255 images (no normalization) as an input to transformer net - play with that. You'll have to normalize transformer net output before feeding that to VGG16.
+
+Some of these may further improve the visual quality that you get from these models! If you find something interesting I'd like to hear from you!
 
 ## Acknowledgements
 

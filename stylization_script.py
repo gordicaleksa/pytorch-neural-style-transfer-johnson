@@ -45,7 +45,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--content_img_name", type=str, help="content image to stylize", default='taj_mahal.jpg')
     parser.add_argument("--img_width", type=int, help="resize content image to this width", default=500)
-    parser.add_argument("--model_name", type=str, help="model binary to use for stylization", default='starry_v3.pth')
+    parser.add_argument("--model_name", type=str, help="model binary to use for stylization", default='mosaic_4e5_e2.pth')
     args = parser.parse_args()
 
     # Wrapping inference configuration into a dictionary
