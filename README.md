@@ -183,4 +183,4 @@ If you find this code useful for your research, please cite the following:
 
 ## Licence
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/gordicaleksa/pytorch-nst-feedforward/blob/master/LICENCE)
