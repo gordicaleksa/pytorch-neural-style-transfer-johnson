@@ -34,7 +34,7 @@ if __name__ == '__main__':
     # step2: unzip the resource
     print(f'Started unzipping...')
     with zipfile.ZipFile(resource_tmp_path) as zf:
-        local_resource_path = os.path.join('.', os.pardir)
+        local_resource_path = os.path.join(os.path.dirname(__file__), os.pardir)
         if args.resource == 'pretrained_models':
             local_resource_path = os.path.join(local_resource_path, 'models', 'binaries')
         else:

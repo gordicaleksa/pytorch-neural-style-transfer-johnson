@@ -69,7 +69,7 @@ You just need to specify **names**, it pulls content images and models from defa
 1. content images default dir: `/data/content-images/`
 2. model binaries default dir: `/models/binaries/`
 
-So all **you** got to do is place images and models there and you can use them.
+So all **you** got to do is place images and models there and you can use them. Output will be dumped to `/data/output-images/`.
 
 After you run resource_downloader.py script binaries dir will be pre-populated with 4 pretrained models.
 
@@ -82,7 +82,7 @@ Go ahead, play with it and make some art!
 
 ### Training your own models
 
-1. Download MS COCO dataset, run `python utils/resource_downloader.py -r mscoco_dataset`
+1. Download MS COCO dataset, run `python utils/resource_downloader.py -r mscoco_dataset` (it's a 12.5 GB file)
 2. Run `python training_script.py --style_img_name <name>`
 
 Now that will probably actually work!
@@ -96,6 +96,10 @@ I strongly recommend playing with these 2 params:
 That bring us to the next section!
 
 ### Tensorboard Visualizations
+
+To **start tensorboard** just run: `tensorboard --logdir=runs --samples_per_plugin images=50` from your conda console.
+
+`samples_per_plugin images=<number>` sets the number of images you'll be able to see when moving the image slider.
 
 There's basically **2 things you want to monitor** during your training (not counting console output; redundant if you use t-board)
 
@@ -126,11 +130,7 @@ This one helps immensely so as to help you manually early-stop your training if 
 <img src="data/examples/readme_pics/monitor_img2.jpg" height="350"/>
 </p>
 
-In the beggining stylized images look kinda rubish like the one one the left. As the training progresses you'll get more meaningful images popping out (the one on the right).
-
-To **start tensorboard** just run: `tensorboard --logdir=runs --samples_per_plugin images=50` from your conda console.
-
-`samples_per_plugin images=<number>` sets the number of images you'll be able to see when moving the image slider. 
+In the beggining stylized images look kinda rubish like the one one the left. As the training progresses you'll get more meaningful images popping out (the one on the right). 
 
 ## Debugging
 Q: My style/content loss curves just spiked in the middle of training?<br/>
