@@ -180,3 +180,7 @@ If you find this code useful for your research, please cite the following:
   howpublished = {\url{https://github.com/gordicaleksa/pytorch-nst-feedforward}},
 }
 ```
+
+## Licence
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
