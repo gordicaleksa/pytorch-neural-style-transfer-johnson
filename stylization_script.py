@@ -2,7 +2,6 @@ import os
 import argparse
 
 import torch
-import numpy as np
 
 import utils.utils as utils
 from models.definitions.transformer_net import TransformerNet
@@ -37,7 +36,6 @@ if __name__ == "__main__":
 
     assert utils.dir_contains_only_models(model_binaries_path), f'Model directory should contain only model binaries.'
     os.makedirs(output_images_path, exist_ok=True)
-    model_names = os.listdir(model_binaries_path)  # list of available model binaries
 
     #
     # Modifiable args - feel free to play with these
