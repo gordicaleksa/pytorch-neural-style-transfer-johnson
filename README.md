@@ -93,7 +93,7 @@ I strongly recommend playing with these 2 params:
 1. **style_weight** - I always kept it in the [1e5, 9e5] range, you may have to tweak it for your specific style image a little bit
 2. **subset_size** - Usually 32k images do the job (that's 8k batches) - you'll need to monitor **tensorboard** to figure out if your curves are saturating at that point or not. If they are still going down set the number higher
 
-That bring us to the next section!
+That brings us to the next section!
 
 ### Tensorboard Visualizations
 
@@ -101,7 +101,7 @@ To **start tensorboard** just run: `tensorboard --logdir=runs --samples_per_plug
 
 `samples_per_plugin images=<number>` sets the number of images you'll be able to see when moving the image slider.
 
-There's basically **2 things you want to monitor** during your training (not counting console output; redundant if you use t-board)
+There's basically **2 things you want to monitor** during your training (not counting console output <- redundant if you use tensor board)
 
 #### Monitor your loss/statistics curves
 
