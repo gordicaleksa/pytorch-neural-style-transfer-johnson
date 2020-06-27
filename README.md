@@ -22,21 +22,21 @@ I've included automatic, pretrained models and MS COCO dataset, download script 
 Here are some examples with the [4 pretrained models](https://www.dropbox.com/s/fb39gscd1b42px1/pretrained_models.zip?dl=0) (automatic download enabled - look at [usage section](#usage)):
 
 <p align="center">
-<img src="data/examples/style_images/mosaic_crop_resized_230.jpg" width="230px">
-<img src="data/examples/mosaic_model/taj_mahal_width_500_model_mosaic_4e5_e2_resized_230.jpg" width="330px">
-<img src="data/examples/mosaic_model/figures_width_500_model_mosaic_4e5_e2_resized_230.jpg" width="342px">
+<img src="data/examples/style_images/mosaic_crop_resized_230.jpg" width="208px">
+<img src="data/examples/mosaic_model/taj_mahal_width_500_model_mosaic_4e5_e2_resized_230.jpg" width="300px">
+<img src="data/examples/mosaic_model/figures_width_500_model_mosaic_4e5_e2_resized_230.jpg" width="310px">
 
-<img src="data/examples/style_images/edtaonisl_crop_resized_230.jpg" width="230px">
-<img src="data/examples/edtaonisl_model/taj_mahal_width_500_model_edtaonisl_9e5_33k_resized_230.jpg" width="330px">
-<img src="data/examples/edtaonisl_model/figures_width_500_model_edtaonisl_9e5_33k_resized_230.jpg" width="342px">
+<img src="data/examples/style_images/edtaonisl_crop_resized_230.jpg" width="208px">
+<img src="data/examples/edtaonisl_model/taj_mahal_width_500_model_edtaonisl_9e5_33k_resized_230.jpg" width="300px">
+<img src="data/examples/edtaonisl_model/figures_width_500_model_edtaonisl_9e5_33k_resized_230.jpg" width="310px">
 
-<img src="data/examples/style_images/vg_starry_night_resized_230.jpg" width="230px">
-<img src="data/examples/starry_night_model/taj_mahal_width_500_model_starry_v3_resize_230.jpg" width="330px">
-<img src="data/examples/starry_night_model/figures_width_500_model_starry_v3_resize_230.jpg" width="342px">
+<img src="data/examples/style_images/vg_starry_night_resized_230.jpg" width="208px">
+<img src="data/examples/starry_night_model/taj_mahal_width_500_model_starry_v3_resize_230.jpg" width="300px">
+<img src="data/examples/starry_night_model/figures_width_500_model_starry_v3_resize_230.jpg" width="310px">
 
-<img src="data/examples/style_images/candy_resize_230.jpg" width="230px">
-<img src="data/examples/candy_model/taj_mahal_width_800_model_candy_resize_230.jpg" width="330px">
-<img src="data/examples/candy_model/figures_width_500_model_candy_resize_230.jpg" width="342px">
+<img src="data/examples/style_images/candy_resize_230.jpg" width="208px">
+<img src="data/examples/candy_model/taj_mahal_width_800_model_candy_resize_230.jpg" width="300px">
+<img src="data/examples/candy_model/figures_width_500_model_candy_resize_230.jpg" width="310px">
 </p>
 
 *Note:* keep in mind that I still need to improve these models, 3 of these (last 3 rows) only saw 33k images from MS COCO.
@@ -76,8 +76,8 @@ After you run resource_downloader.py script binaries dir will be pre-populated w
 Go ahead, play with it and make some art!
 
 <p align="center">
-<img src="data/examples/lion_width_360_model_mosaic_4e5_e2.jpg" width="360px">
-<img src="data/examples/figures_width_550_model_mosaic_4e5_e2.jpg" height="360px">
+<img src="data/examples/lion_width_360_model_mosaic_4e5_e2.jpg" width="325px">
+<img src="data/examples/figures_width_550_model_mosaic_4e5_e2.jpg" height="325px">
 </p>
 
 ### Training your own models
