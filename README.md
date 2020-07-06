@@ -43,8 +43,9 @@ Here are some examples with the [4 pretrained models](https://www.dropbox.com/s/
 
 ## Setup
 
-1. Run `conda env create` from project directory (this will create a brand new conda environment).
-2. Run `activate pytorch-nst-fast` (if you want to run scripts from your console otherwise set the interpreter in your IDE)
+1. Open Anaconda Prompt and navigate into project directory `cd path_to_repo`
+2. Run `conda env create` from project directory (this will create a brand new conda environment).
+3. Run `activate pytorch-nst-fast` (if you want to run scripts from your console otherwise set the interpreter in your IDE)
 
 That's it! It should work out-of-the-box executing environment.yml file which deals with dependencies.
 
@@ -55,6 +56,8 @@ PyTorch package will pull some version of CUDA with it, but it is highly recomme
 Follow through points 1 and 2 of [this setup](https://github.com/Petlja/PSIML/blob/master/docs/MachineSetup.md) and use the most up-to-date versions of Miniconda and CUDA/cuDNN (I recommend CUDA 10.1 or 10.2 as those are compatible with PyTorch 1.5, which is used in this repo, and newest compatible cuDNN).
 
 ## Usage
+
+Go through this section to run the project but if you are still having problems take a look at [this (stylization)](https://www.youtube.com/watch?v=lOR-LncQlk8&list=PLBoQnSflObcmbfshq9oNs41vODgXG-608&index=5) and [this (training)](https://www.youtube.com/watch?v=EuXd-aO77A0&list=PLBoQnSflObcmbfshq9oNs41vODgXG-608&index=6) accompanying YouTube videos.
 
 ### Stylization
 
