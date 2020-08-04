@@ -23,7 +23,7 @@ def stylize_static_image(inference_config):
 
     with torch.no_grad():
         stylized_img = stylization_model(content_image).to('cpu').numpy()[0]
-        utils.save_and_maybe_display_image(inference_config, stylized_img, should_display=True)
+        utils.save_and_maybe_display_image(inference_config, stylized_img, should_display=inference_config['should_display'])
 
 
 if __name__ == "__main__":
@@ -41,9 +41,12 @@ if __name__ == "__main__":
     # Modifiable args - feel free to play with these
     #
     parser = argparse.ArgumentParser()
-    parser.add_argument("--content_img_name", type=str, help="content image to stylize", default='taj_mahal.jpg')
-    parser.add_argument("--img_width", type=int, help="resize content image to this width", default=500)
-    parser.add_argument("--model_name", type=str, help="model binary to use for stylization", default='mosaic_4e5_e2.pth')
+    parser.add_argument("--content_img_name", type=str, help="Content image to stylize", default='taj_mahal.jpg')
+    parser.add_argument("--img_width", type=int, help="Resize content image to this width", default=500)
+    parser.add_argument("--model_name", type=str, help="Model binary to use for stylization", default='mosaic_4e5_e2.pth')
+
+    parser.add_argument("--should_display", type=bool, help="Should display the stylized result", default=False)
+    parser.add_argument("--redirected_output", type=str, help="Overwrite default output dir. Useful when this project is used as a submodule", default=None)
     args = parser.parse_args()
 
     # Wrapping inference configuration into a dictionary

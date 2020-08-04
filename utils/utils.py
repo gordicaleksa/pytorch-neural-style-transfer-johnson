@@ -63,14 +63,31 @@ def post_process_image(dump_img):
     return dump_img
 
 
+def get_next_available_name(input_dir):
+    if len(os.listdir(input_dir)) == 0:
+        return '000000.jpg'
+    else:
+        latest_file = sorted(os.listdir(input_dir))[-1]
+        prefix_int = int(latest_file.split('.')[0])
+        return f'{str(prefix_int + 1).zfill(6)}.jpg'
+
+
 def save_and_maybe_display_image(inference_config, dump_img, should_display=False):
     assert isinstance(dump_img, np.ndarray), f'Expected numpy array got {type(dump_img)}.'
 
     dump_img = post_process_image(dump_img)
     if inference_config['img_width'] is None:
         inference_config['img_width'] = dump_img.shape[0]
-    dump_img_name = inference_config['content_img_name'].split('.')[0] + '_width_' + str(inference_config['img_width']) + '_model_' + inference_config['model_name'].split('.')[0] + '.jpg'
-    cv.imwrite(os.path.join(inference_config['output_images_path'], dump_img_name), dump_img[:, :, ::-1])  # ::-1 because opencv expects BGR (and not RGB) format...
+
+    if inference_config['redirected_output'] is None:
+        dump_dir = inference_config['output_images_path']
+        dump_img_name = os.path.basename(inference_config['content_img_name']).split('.')[0] + '_width_' + str(inference_config['img_width']) + '_model_' + inference_config['model_name'].split('.')[0] + '.jpg'
+    else:  # useful when this repo is used as a utility submodule in some other repo like pytorch-naive-video-nst
+        dump_dir = inference_config['redirected_output']
+        os.makedirs(dump_dir, exist_ok=True)
+        dump_img_name = get_next_available_name(inference_config['redirected_output'])
+
+    cv.imwrite(os.path.join(dump_dir, dump_img_name), dump_img[:, :, ::-1])  # ::-1 because opencv expects BGR (and not RGB) format...
     print(f'Saved image to {inference_config["output_images_path"]}.')
 
     if should_display:
