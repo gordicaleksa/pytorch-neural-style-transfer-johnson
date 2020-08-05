@@ -88,7 +88,9 @@ def save_and_maybe_display_image(inference_config, dump_img, should_display=Fals
         dump_img_name = get_next_available_name(inference_config['redirected_output'])
 
     cv.imwrite(os.path.join(dump_dir, dump_img_name), dump_img[:, :, ::-1])  # ::-1 because opencv expects BGR (and not RGB) format...
-    print(f'Saved image to {inference_config["output_images_path"]}.')
+
+    if inference_config['verbose']:
+        print(f'Saved image to {dump_dir}.')
 
     if should_display:
         plt.imshow(dump_img)

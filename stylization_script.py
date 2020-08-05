@@ -16,10 +16,12 @@ def stylize_static_image(inference_config):
     # load the weights and set the model to evaluation mode
     stylization_model = TransformerNet().to(device)
     training_state = torch.load(os.path.join(inference_config["model_binaries_path"], inference_config["model_name"]))
-    utils.print_model_metadata(training_state)
     state_dict = training_state["state_dict"]
     stylization_model.load_state_dict(state_dict, strict=True)
     stylization_model.eval()
+
+    if inference_config['verbose']:
+        utils.print_model_metadata(training_state)
 
     with torch.no_grad():
         stylized_img = stylization_model(content_image).to('cpu').numpy()[0]
@@ -45,7 +47,9 @@ if __name__ == "__main__":
     parser.add_argument("--img_width", type=int, help="Resize content image to this width", default=500)
     parser.add_argument("--model_name", type=str, help="Model binary to use for stylization", default='mosaic_4e5_e2.pth')
 
-    parser.add_argument("--should_display", type=bool, help="Should display the stylized result", default=False)
+    # Less important arguments
+    parser.add_argument("--should_display", type=bool, help="Should display the stylized result", default=True)
+    parser.add_argument("--verbose", type=bool, help="Print model metadata (how the model was trained) and where the resulting stylized image was saved.", default=True)
     parser.add_argument("--redirected_output", type=str, help="Overwrite default output dir. Useful when this project is used as a submodule", default=None)
     args = parser.parse_args()
 
