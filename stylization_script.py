@@ -48,8 +48,8 @@ if __name__ == "__main__":
     parser.add_argument("--model_name", type=str, help="Model binary to use for stylization", default='mosaic_4e5_e2.pth')
 
     # Less important arguments
-    parser.add_argument("--should_display", type=bool, help="Should display the stylized result", default=True)
-    parser.add_argument("--verbose", type=bool, help="Print model metadata (how the model was trained) and where the resulting stylized image was saved.", default=True)
+    parser.add_argument("--should_display", action='store_false', help="Should display the stylized result (default true)")
+    parser.add_argument("--verbose", action='store_false', help="Print model metadata (how the model was trained) and where the resulting stylized image was saved (default true)")
     parser.add_argument("--redirected_output", type=str, help="Overwrite default output dir. Useful when this project is used as a submodule", default=None)
     args = parser.parse_args()
 
