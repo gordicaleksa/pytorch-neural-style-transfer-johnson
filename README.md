@@ -67,7 +67,7 @@ Go through this section to run the project but if you are still having problems 
 That's it! If you want more flexibility (and I guess you do) there's a couple more nuggets of info.
 
 More expressive command is:<br/>
-`python stylization_script.py --content_input <img name or directory> --img_width <width in px> --model_name <name>`
+`python stylization_script.py --content_input <imgname or directory> --img_width <width> --model_name <name>`
 
 If you pass a directory into `--content_input` it will perform batch stylization.<br/>
 You can control the batch size (in case you have VRAM problems) with `batch_size` param.

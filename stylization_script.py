@@ -28,11 +28,16 @@ def stylize_static_image(inference_config):
             img_dataset = utils.SimpleDataset(inference_config['content_input'], inference_config['img_width'])
             img_loader = DataLoader(img_dataset, batch_size=inference_config['batch_size'])
 
-            for img_batch in img_loader:
-                img_batch = img_batch.to(device)
-                stylized_imgs = stylization_model(img_batch).to('cpu').numpy()
-                for stylized_img in stylized_imgs:
-                    utils.save_and_maybe_display_image(inference_config, stylized_img, should_display=False)
+            try:
+                for img_batch in img_loader:
+                    img_batch = img_batch.to(device)
+                    stylized_imgs = stylization_model(img_batch).to('cpu').numpy()
+                    for stylized_img in stylized_imgs:
+                        utils.save_and_maybe_display_image(inference_config, stylized_img, should_display=False)
+            except Exception as e:
+                print(e)
+                print(f'Consider making the batch size smaller, current size = {inference_config["batch_size"]}')
+                exit(-1)
 
         else:  # do stylization for a single image
             content_img_path = os.path.join(inference_config['content_images_path'], inference_config['content_input'])
