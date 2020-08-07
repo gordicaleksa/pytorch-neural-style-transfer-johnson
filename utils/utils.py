@@ -119,7 +119,8 @@ def save_and_maybe_display_image(inference_config, dump_img, should_display=Fals
 
     cv.imwrite(os.path.join(dump_dir, dump_img_name), dump_img[:, :, ::-1])  # ::-1 because opencv expects BGR (and not RGB) format...
 
-    if inference_config['verbose']:
+    # Don't print this information in batch stylization mode
+    if inference_config['verbose'] and not os.path.isdir(inference_config['content_input']):
         print(f'Saved image to {dump_dir}.')
 
     if should_display:

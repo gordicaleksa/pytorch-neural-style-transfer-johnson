@@ -29,14 +29,19 @@ def stylize_static_image(inference_config):
             img_loader = DataLoader(img_dataset, batch_size=inference_config['batch_size'])
 
             try:
-                for img_batch in img_loader:
+                processed_imgs_cnt = 0
+                for batch_id, img_batch in enumerate(img_loader):
+                    processed_imgs_cnt += len(img_batch)
+                    if inference_config['verbose']:
+                        print(f'Processing batch {batch_id + 1} ({processed_imgs_cnt}/{len(img_dataset)} processed images).')
+
                     img_batch = img_batch.to(device)
                     stylized_imgs = stylization_model(img_batch).to('cpu').numpy()
                     for stylized_img in stylized_imgs:
                         utils.save_and_maybe_display_image(inference_config, stylized_img, should_display=False)
             except Exception as e:
                 print(e)
-                print(f'Consider making the batch size smaller, current size = {inference_config["batch_size"]}')
+                print(f'Consider making the batch_size (current = {inference_config["batch_size"]} images) or img_width (current = {inference_config["img_width"]} px) smaller')
                 exit(-1)
 
         else:  # do stylization for a single image
