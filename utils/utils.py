@@ -1,4 +1,6 @@
 import os
+import re
+
 
 import cv2 as cv
 import numpy as np
@@ -9,11 +11,36 @@ from torch.utils.data import Dataset, DataLoader, Sampler
 import torch
 import git
 
+
 IMAGENET_MEAN_1 = np.array([0.485, 0.456, 0.406])
 IMAGENET_STD_1 = np.array([0.229, 0.224, 0.225])
 IMAGENET_MEAN_255 = np.array([123.675, 116.28, 103.53])
 # Usually when normalizing 0..255 images only mean-normalization is performed -> that's why standard dev is all 1s here
 IMAGENET_STD_NEUTRAL = np.array([1, 1, 1])
+
+
+class SimpleDataset(Dataset):
+    def __init__(self, img_dir, target_width):
+        self.img_dir = img_dir
+        self.img_paths = [os.path.join(img_dir, img_name) for img_name in os.listdir(img_dir)]
+
+        h, w = load_image(self.img_paths[0]).shape[:2]
+        img_height = int(h * (target_width / w))
+        self.target_width = target_width
+        self.target_height = img_height
+
+        self.transform = transforms.Compose([
+            transforms.ToTensor(),
+            transforms.Normalize(mean=IMAGENET_MEAN_1, std=IMAGENET_STD_1)
+        ])
+
+    def __len__(self):
+        return len(self.img_paths)
+
+    def __getitem__(self, idx):
+        img = load_image(self.img_paths[idx], target_shape=(self.target_height, self.target_width))
+        tensor = self.transform(img)
+        return tensor
 
 
 def load_image(img_path, target_shape=None):
@@ -64,10 +91,13 @@ def post_process_image(dump_img):
 
 
 def get_next_available_name(input_dir):
-    if len(os.listdir(input_dir)) == 0:
+    img_name_pattern = re.compile(r'[0-9]{6}\.jpg')
+    candidates = [candidate for candidate in os.listdir(input_dir) if re.fullmatch(img_name_pattern, candidate)]
+
+    if len(candidates) == 0:
         return '000000.jpg'
     else:
-        latest_file = sorted(os.listdir(input_dir))[-1]
+        latest_file = sorted(candidates)[-1]
         prefix_int = int(latest_file.split('.')[0])
         return f'{str(prefix_int + 1).zfill(6)}.jpg'
 
@@ -81,7 +111,7 @@ def save_and_maybe_display_image(inference_config, dump_img, should_display=Fals
 
     if inference_config['redirected_output'] is None:
         dump_dir = inference_config['output_images_path']
-        dump_img_name = os.path.basename(inference_config['content_img_name']).split('.')[0] + '_width_' + str(inference_config['img_width']) + '_model_' + inference_config['model_name'].split('.')[0] + '.jpg'
+        dump_img_name = os.path.basename(inference_config['content_input']).split('.')[0] + '_width_' + str(inference_config['img_width']) + '_model_' + inference_config['model_name'].split('.')[0] + '.jpg'
     else:  # useful when this repo is used as a utility submodule in some other repo like pytorch-naive-video-nst
         dump_dir = inference_config['redirected_output']
         os.makedirs(dump_dir, exist_ok=True)

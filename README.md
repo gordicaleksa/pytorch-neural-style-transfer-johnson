@@ -61,14 +61,20 @@ Go through this section to run the project but if you are still having problems 
 
 ### Stylization
 
-1. Download pretrained models, run: `python utils/resource_downloader.py` (it'll download pretrained models by default)
+1. Download pretrained models, run: `python utils/resource_downloader.py`
 2. Run `python stylization_script.py` (it's got default content image and model set)
 
-That's it! If you want more flexibility (and I guess you do) there's a couple more nuggets of info:
+That's it! If you want more flexibility (and I guess you do) there's a couple more nuggets of info.
 
-Full command is: `python stylization_script.py --content_img_name <name> --img_width <width in px> --model_name <name>`
+More expressive command is:<br/>
+`python stylization_script.py --content_input <img name or directory> --img_width <width in px> --model_name <name>`
 
-You just need to specify **names**, it pulls content images and models from default directories:
+If you pass a directory into `--content_input` it will perform batch stylization.<br/>
+You can control the batch size (in case you have VRAM problems) with `batch_size` param.
+
+-----
+
+You just need to specify the **names**, the repo automatically finds content images and models in default directories:
 1. content images default dir: `/data/content-images/`
 2. model binaries default dir: `/models/binaries/`
 

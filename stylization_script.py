@@ -1,7 +1,10 @@
 import os
 import argparse
 
+
 import torch
+from torch.utils.data import DataLoader
+
 
 import utils.utils as utils
 from models.definitions.transformer_net import TransformerNet
@@ -10,10 +13,7 @@ from models.definitions.transformer_net import TransformerNet
 def stylize_static_image(inference_config):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    content_img_path = os.path.join(inference_config['content_images_path'], inference_config['content_img_name'])
-    content_image = utils.prepare_img(content_img_path, inference_config['img_width'], device)
-
-    # load the weights and set the model to evaluation mode
+    # Prepare the model - load the weights and put the model into evaluation mode
     stylization_model = TransformerNet().to(device)
     training_state = torch.load(os.path.join(inference_config["model_binaries_path"], inference_config["model_name"]))
     state_dict = training_state["state_dict"]
@@ -24,8 +24,21 @@ def stylize_static_image(inference_config):
         utils.print_model_metadata(training_state)
 
     with torch.no_grad():
-        stylized_img = stylization_model(content_image).to('cpu').numpy()[0]
-        utils.save_and_maybe_display_image(inference_config, stylized_img, should_display=inference_config['should_not_display'])
+        if os.path.isdir(inference_config['content_input']):  # do a batch stylization (every image in the directory)
+            img_dataset = utils.SimpleDataset(inference_config['content_input'], inference_config['img_width'])
+            img_loader = DataLoader(img_dataset, batch_size=inference_config['batch_size'])
+
+            for img_batch in img_loader:
+                img_batch = img_batch.to(device)
+                stylized_imgs = stylization_model(img_batch).to('cpu').numpy()
+                for stylized_img in stylized_imgs:
+                    utils.save_and_maybe_display_image(inference_config, stylized_img, should_display=False)
+
+        else:  # do stylization for a single image
+            content_img_path = os.path.join(inference_config['content_images_path'], inference_config['content_input'])
+            content_image = utils.prepare_img(content_img_path, inference_config['img_width'], device)
+            stylized_img = stylization_model(content_image).to('cpu').numpy()[0]
+            utils.save_and_maybe_display_image(inference_config, stylized_img, should_display=inference_config['should_not_display'])
 
 
 if __name__ == "__main__":
@@ -43,15 +56,21 @@ if __name__ == "__main__":
     # Modifiable args - feel free to play with these
     #
     parser = argparse.ArgumentParser()
-    parser.add_argument("--content_img_name", type=str, help="Content image to stylize", default='taj_mahal.jpg')
+    # Put image name or directory containing images (if you'd like to do a batch stylization on all those images)
+    parser.add_argument("--content_input", type=str, help="Content image(s) to stylize", default='taj_mahal.jpg')
+    parser.add_argument("--batch_size", type=int, help="Batch size used only if you set content_input to a directory", default=5)
     parser.add_argument("--img_width", type=int, help="Resize content image to this width", default=500)
     parser.add_argument("--model_name", type=str, help="Model binary to use for stylization", default='mosaic_4e5_e2.pth')
 
-    # Less important arguments
+    # Less frequently used arguments
     parser.add_argument("--should_not_display", action='store_false', help="Should display the stylized result")
     parser.add_argument("--verbose", action='store_true', help="Print model metadata (how the model was trained) and where the resulting stylized image was saved")
     parser.add_argument("--redirected_output", type=str, help="Overwrite default output dir. Useful when this project is used as a submodule", default=None)
     args = parser.parse_args()
+
+    # if redirected output is not set when doing batch stylization set to default image output location
+    if os.path.isdir(args.content_input) and args.redirected_output is None:
+        args.redirected_output = output_images_path
 
     # Wrapping inference configuration into a dictionary
     inference_config = dict()
