@@ -42,7 +42,7 @@ def stylize_static_image(inference_config):
             except Exception as e:
                 print(e)
                 print(f'Consider making the batch_size (current = {inference_config["batch_size"]} images) or img_width (current = {inference_config["img_width"]} px) smaller')
-                exit(-1)
+                exit(1)
 
         else:  # do stylization for a single image
             content_img_path = os.path.join(inference_config['content_images_path'], inference_config['content_input'])
